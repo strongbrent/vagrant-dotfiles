@@ -327,6 +327,18 @@ install_terraform() {
     fi
 }
 
+# Installs Ultimate vimrc
+install_vimrc() {
+    if found_dir "${HOME}/.vim_runtime"; then
+        echo_task "Package already installed: Ultimate .vimrc"
+        return
+    fi
+
+    echo_task "Installing package: Ultimate .vimrc"
+    git clone --depth=1 https://github.com/amix/vimrc.git "${HOME}/.vim_runtime"
+    sh "${HOME}/.vim_runtime"/install_awesome_vimrc.sh
+}
+
 
 # --- Main function -------------------------------------------------------
 main() {
@@ -368,6 +380,9 @@ main() {
 
     echo_header "Installing: Serverles Framework"
     install_serverless
+
+    echo_header "Installing: Ultimate .vimrc"
+    install_vimrc
 }
 
 main "$@"
