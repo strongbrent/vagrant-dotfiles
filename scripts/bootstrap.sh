@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
 
+# Global Variables
 export DEBIAN_FRONTEND=noninteractive
 PYENV_ROOT="${HOME}/.pyenv"
+BASHRC="${HOME}/.bashrc"
+ZSHRC="${HOME}/.zshrc"
+
+# Global Array
+shell_envs=(
+    "${BASHRC}"
+    "${ZSHRC}"
+)
 
 # --- Helper Functions ---------------------------------------------------
 
@@ -106,7 +115,7 @@ install_awsume() {
     pip install awsume
 }
 
-# One-click installation of the latest chefdk
+# One-click installation of a speficied version of the chefdk
 install_chef() {
     if found_cmd knife; then
         echo_task "Package already installed: chefdk"
@@ -114,7 +123,7 @@ install_chef() {
     fi
 
     echo_task "Installing package: chefdk"
-    curl -s -L https://omnitruck.chef.io/install.sh | sudo bash
+    curl -s -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v 15.3.14
 }
 
 # One-click installation of the latest docker
@@ -147,7 +156,14 @@ install_golang() {
     fi
 
     echo_task "Installing package: golang"
-    curl -s https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh | bash
+    curl -s https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh | bash &> /dev/null
+
+    echo_task "Writing Golang configuration to ${ZSHRC}"
+    echo '# GoLang' >> "${ZSHRC}"
+    echo 'export GOROOT=${HOME}/.go' >> "${ZSHRC}"
+    echo 'export PATH=$GOROOT/bin:$PATH' >> "${ZSHRC}"
+    echo 'export GOPATH=${HOME}/go' >> "${ZSHRC}"
+    echo 'export PATH=$GOPATH/bin:$PATH' >> "${ZSHRC}"
 }
 
 # Installs latest version of kubernetes (via apt)
@@ -179,6 +195,50 @@ install_minikube() {
     sudo mv -v minikube-linux-amd64 /usr/local/bin/minikube
 }
 
+# Installs Oh-My-Zsh
+install_ohmyzsh() {
+    if found_dir "${HOME}/.oh-my-zsh"; then
+        echo_task "Package already installed: oh-my-zsh"
+        return
+    fi
+
+    echo_task "Installing package: oh-my-zsh"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
+
+    echo_task "Installing plugin packages: zsh-syntax-highlighting, zsh-autosuggestions"
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+    if ! found_file "${ZSHRC}"; then
+        error_exit "ERROR: ${ZSHRC} does not exist"
+    fi
+
+    echo_task "Writing zsh theme to: ${ZSHRC}"
+    local -r orig_theme='ZSH_THEME="robbyrussell"'
+    local -r new_theme='ZSH_THEME="bira"'
+    replace_line "${orig_theme}" "${new_theme}" "${ZSHRC}"
+
+    echo_task "Writing plugins to: ${ZSHRC}"
+    local -r orig_plugins="plugins=(git)"
+    local -r new_plugins="plugins=(git zsh-syntax-highlighting zsh-autosuggestions)"
+    replace_line "${orig_plugins}" "${new_plugins}" "${ZSHRC}"
+
+    # write additional aliases to SHELL initialization scripts
+    for i in "${shell_envs[@]}"
+    do
+        if ! found_file "${i}"; then
+            error_exit "ERROR: ${i} does not exist"
+        fi
+
+        echo_task "Writing additional aliases to: ${i}"
+        echo "" >> "${i}"
+        echo "# My Aliases" >> "${i}"
+        echo "alias update='sudo apt-get update && sudo apt-get upgrade'" >> "${i}"
+        echo "alias autoremove='sudo apt autoremove'" >> "${i}"
+        echo "alias trimsd='sudo fstrim -av'" >> "${i}"
+    done
+}
+
 # Useful SRE packages
 install_packages() {
     pkgs=(
@@ -205,6 +265,8 @@ install_packages() {
         iptraf
         jq
         libffi-dev
+        libbz2-dev
+        libsqlite3-dev
         llvm
         make
         mtr
@@ -228,6 +290,7 @@ install_packages() {
         unzip
         wget
         zlib1g-dev
+        zsh
     )
 
     sudo apt-get update -qq
@@ -267,46 +330,30 @@ install_pyenv() {
     echo_task "Installing package: pyenv"
     curl -s https://pyenv.run | bash
 
-    # fix for .bashrc
-    echo "" >> "${HOME}/.bashrc"
-    echo "# For pyenv" >> "${HOME}/.bashrc"
-    echo "export PATH=\"${PYENV_ROOT}/bin:\$PATH\"" >> "${HOME}/.bashrc"
-    echo "eval \"\$(pyenv init -)\"" >> "${HOME}/.bashrc"
-    echo "eval \"\$(pyenv virtualenv-init -)\"" >> "${HOME}/.bashrc"
-    echo "" >> "${HOME}/.bashrc"
+    # fix for SHELL initialization scripts
+    for i in "${shell_envs[@]}"
+    do
+        if ! found_file "${i}"; then
+            error_exit "ERROR: ${i} does not exist"
+        fi
+
+        echo_task "Writing pyenv configuration to: ${i}"
+        echo "" >> "${i}"
+        echo "# For pyenv" >> "${i}"
+        echo "export PATH=\"${PYENV_ROOT}/bin:\$PATH\"" >> "${i}"
+        echo "eval \"\$(pyenv init -)\"" >> "${i}"
+        echo "eval \"\$(pyenv virtualenv-init -)\"" >> "${i}"
+        echo "" >> "${i}"
+    done
 }
 
-# Installs the latest version of the Serverless Framework
-install_serverless() {
-    local NVM_DIR="${HOME}/.nvm"
-    local NODE_VERSION=10.16.3
-    local NODE_HOME="${NVM_DIR}/versions/node/v${NODE_VERSION}"
-    local SERVERLESS_PATH="${NODE_HOME}/bin/serverless"
-
-    if found_file "${SERVERLESS_PATH}"; then
-        echo_task "Package already installed: Serverless Framework"
-        return
-    fi
-
-    # Install nvm
-    if ! found_dir "${NVM_DIR}"; then
-        echo_task "Installing package: nvm"
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-    fi
-
-    # Install nodejs via nvm (whatever version of 10 that is supported by AWS Lambda)
-    if ! found_dir "${NODE_HOME}"; then
-        echo_task "Installing package via nvm: nodejs"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-        nvm install "${NODE_VERSION}"
-    fi
-
-    # Install latest version of serverless
-    echo_task "Installing package via npm: serverless"
-    npm install -g serverless
-
-    # Fix .bashrc
-    echo -e "\n" >> "${HOME}/.bashrc"
+# DESC: Replaces a line (in place) in a specified file with specified text
+# ARGS: $1 (REQ): original line of text
+#       $2 (REQ): new line of text
+#       $3 (REQ): specified file
+# OUT:  NONE
+replace_line() {
+    sed -i "s/${1}/${2}/g" "${3}"
 }
 
 # One-click installer for specified version of Terraform
@@ -337,6 +384,50 @@ install_vimrc() {
     echo_task "Installing package: Ultimate .vimrc"
     git clone --depth=1 https://github.com/amix/vimrc.git "${HOME}/.vim_runtime"
     sh "${HOME}/.vim_runtime"/install_awesome_vimrc.sh
+
+    local -r my_configs="${HOME}/.vim_runtime/my_configs.vim"
+    echo_task "Disabling section folding in: ${my_configs}"
+    touch "${my_configs}"
+    echo 'set nofoldenable' > "${my_configs}"
+
+    # Add alias to update ultimate vimrc
+    for i in "${shell_envs[@]}"
+    do
+        if ! found_file "${i}"; then
+            error_exit "ERROR: ${i} does not exist"
+        fi
+
+        echo_task "Writing Ultimate Vimrc update alias to: ${i}"
+        echo "" >> "${i}"
+        echo "# For Ultimate Vimrc" >> "${i}"
+        echo 'alias vimrc_update="pushd ${HOME}/.vim_runtime && git pull --rebase && popd"' >> "${i}"
+    done
+}
+
+# Installs zsh-nvm
+install_zsh-nvm() {
+    local -r NVM_HOME="${HOME}/.zsh-nvm"
+
+    if found_dir "${NVM_HOME}"; then
+        echo_task "Package already instavaled: zsh-nvm"
+        return
+    fi
+
+    echo_task "Installing package: zsh-nvm"
+    git clone https://github.com/lukechilds/zsh-nvm.git "${NVM_HOME}"
+
+    # write configuration to SHELL initialization script
+    if ! found_file "${ZSHRC}"; then
+        error_exit "ERROR: ${ZSHRC} does not exist"
+    fi
+
+    echo_task "Writing additional configuration to: ${ZSHRC}"
+    echo "" >> "${ZSHRC}"
+    echo "" >> "${ZSHRC}"
+    echo "# For nvm" >> "${ZSHRC}"
+    echo "source ${HOME}/.zsh-nvm/zsh-nvm.plugin.zsh" >> "${ZSHRC}"
+
+    /usr/bin/zsh -i -c echo " ... installing nvm"
 }
 
 
@@ -345,17 +436,23 @@ main() {
     echo_header "Installing: specified packages"
     install_packages
 
+    echo_header "Installing: oh-my-zsh"
+    install_ohmyzsh
+
+    echo_header "Installing: Ultimate Vimrc"
+    install_vimrc
+
     echo_header "Installing: pyenv"
     install_pyenv
+
+    echo_header "Installing: Golang"
+    install_golang
 
     echo_header "Installing: Ansible"
     install_ansible
 
     echo_header "Installing: Chef"
     install_chef
-
-    echo_header "Installing: Golang"
-    install_golang
 
     echo_header "Installing: Docker CE"
     install_docker
@@ -378,11 +475,8 @@ main() {
     echo_header "Installing: AWS CLI"
     install_awscli
 
-    echo_header "Installing: Serverles Framework"
-    install_serverless
-
-    echo_header "Installing: Ultimate .vimrc"
-    install_vimrc
+    echo_header "Installing: zsh-nvm"
+    install_zsh-nvm
 }
 
 main "$@"
