@@ -351,42 +351,9 @@ install_pyenv() {
 # ARGS: $1 (REQ): original line of text
 #       $2 (REQ): new line of text
 #       $3 (REQ): specified file
-# OUT:  NONE 
+# OUT:  NONE
 replace_line() {
     sed -i "s/${1}/${2}/g" "${3}"
-}
-
-# Installs the latest version of the Serverless Framework
-install_serverless() {
-    local NVM_DIR="${HOME}/.nvm"
-    local NODE_VERSION=10.16.3
-    local NODE_HOME="${NVM_DIR}/versions/node/v${NODE_VERSION}"
-    local SERVERLESS_PATH="${NODE_HOME}/bin/serverless"
-
-    if found_file "${SERVERLESS_PATH}"; then
-        echo_task "Package already installed: Serverless Framework"
-        return
-    fi
-
-    # Install nvm
-    if ! found_dir "${NVM_DIR}"; then
-        echo_task "Installing package: nvm"
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-    fi
-
-    # Install nodejs via nvm (whatever version of 10 that is supported by AWS Lambda)
-    if ! found_dir "${NODE_HOME}"; then
-        echo_task "Installing package via nvm: nodejs"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-        nvm install "${NODE_VERSION}"
-    fi
-
-    # Install latest version of serverless
-    echo_task "Installing package via npm: serverless"
-    npm install -g serverless
-
-    # Fix .bashrc
-    echo -e "\n" >> "${HOME}/.bashrc"
 }
 
 # One-click installer for specified version of Terraform
@@ -437,6 +404,32 @@ install_vimrc() {
     done
 }
 
+# Installs zsh-nvm
+install_zsh-nvm() {
+    local -r NVM_HOME="${HOME}/.zsh-nvm"
+
+    if found_dir "${NVM_HOME}"; then
+        echo_task "Package already instavaled: zsh-nvm"
+        return
+    fi
+
+    echo_task "Installing package: zsh-nvm"
+    git clone https://github.com/lukechilds/zsh-nvm.git "${NVM_HOME}"
+
+    # write configuration to SHELL initialization script
+    if ! found_file "${ZSHRC}"; then
+        error_exit "ERROR: ${ZSHRC} does not exist"
+    fi
+
+    echo_task "Writing additional configuration to: ${ZSHRC}"
+    echo "" >> "${ZSHRC}"
+    echo "" >> "${ZSHRC}"
+    echo "# For nvm" >> "${ZSHRC}"
+    echo "source ${HOME}/.zsh-nvm/zsh-nvm.plugin.zsh" >> "${ZSHRC}"
+
+    /usr/bin/zsh -i -c echo " ... installing nvm"
+}
+
 
 # --- Main function -------------------------------------------------------
 main() {
@@ -482,8 +475,9 @@ main() {
     echo_header "Installing: AWS CLI"
     install_awscli
 
-    #echo_header "Installing: Serverles Framework"
-    #install_serverless
+    echo_header "Installing: zsh-nvm"
+    install_zsh-nvm
 }
 
 main "$@"
+
