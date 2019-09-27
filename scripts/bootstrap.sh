@@ -434,7 +434,7 @@ install_zsh-nvm() {
 # --- Main function -------------------------------------------------------
 main() {
     echo_header "Installing: specified packages"
-    #install_packages
+    install_packages
 
     echo_header "Installing: oh-my-zsh"
     install_ohmyzsh
