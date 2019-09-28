@@ -90,18 +90,21 @@ install_ansible() {
 
 # Installs latest awscli
 install_awscli() {
+    local -r pkg="awscli"
+    local -r pkg_file="${pkg}-bundle.zip"
+
     if found_cmd aws; then
-        echo_task "Package already installed: awscli"
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: awscli"
-    curl -s "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-    unzip awscli-bundle.zip
+    echo_task "Installing package: ${pkg}"
+    curl -s "https://s3.amazonaws.com/aws-cli/${pkg_file}" -o "${pkg_file}"
+    unzip "${pkg_file}"
     sudo ${HOME}/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 
-    if found_file "${HOME}/awscli-bundle.zip"; then
-        echo_task "Removing installation bundle for: awscli"
+    if found_file "${HOME}/${pkg_file}"; then
+        echo_task "Removing installation bundle for: ${pkg}"
         rm -fv "${HOME}/awscli-bundle.zip"
     fi
 }
