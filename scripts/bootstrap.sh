@@ -75,15 +75,17 @@ found_file() {
 
 # Installer for latest Ansible
 install_ansible() {
-    if found_cmd ansible; then
-        echo_task "Package already installed: ansible"
+    local -r pkg="ansible"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: ansible"
+    echo_task "Installing package: ${pkg}"
     sudo apt-add-repository --yes --update ppa:ansible/ansible
     sudo apt-get update -qq
-    sudo apt-get install -y -qq ansible
+    sudo apt-get install -y -qq "${pkg}"
 }
 
 # Installs latest awscli
@@ -468,7 +470,7 @@ modify_shell() {
 # --- Main function -------------------------------------------------------
 main() {
     echo_header "Installing: specified packages"
-    install_packages
+    #install_packages
 
     echo_header "Installing: oh-my-zsh"
     install_ohmyzsh
