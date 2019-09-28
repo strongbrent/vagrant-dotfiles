@@ -2,7 +2,6 @@
 
 # Global Variables
 export DEBIAN_FRONTEND=noninteractive
-PYENV_ROOT="${HOME}/.pyenv"
 BASHRC="${HOME}/.bashrc"
 ZSHRC="${HOME}/.zshrc"
 
@@ -75,61 +74,75 @@ found_file() {
 
 # Installer for latest Ansible
 install_ansible() {
-    if found_cmd ansible; then
-        echo_task "Package already installed: ansible"
+    local -r pkg="ansible"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: ansible"
+    echo_task "Installing package: ${pkg}"
     sudo apt-add-repository --yes --update ppa:ansible/ansible
     sudo apt-get update -qq
-    sudo apt-get install -y -qq ansible
+    sudo apt-get install -y -qq "${pkg}"
 }
 
 # Installs latest awscli
 install_awscli() {
+    local -r pkg="awscli"
+    local -r pkg_file="${pkg}-bundle.zip"
+
     if found_cmd aws; then
-        echo_task "Package already installed: awscli"
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: awscli"
-    curl -s "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-    unzip awscli-bundle.zip
+    echo_task "Installing package: ${pkg}"
+    curl -s "https://s3.amazonaws.com/aws-cli/${pkg_file}" -o "${pkg_file}"
+    unzip "${pkg_file}"
     sudo ${HOME}/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 
-    if found_file "${HOME}/awscli-bundle.zip"; then
-        echo_task "Removing installation bundle for: awscli"
+    if found_file "${HOME}/${pkg_file}"; then
+        echo_task "Removing installation bundle for: ${pkg}"
         rm -fv "${HOME}/awscli-bundle.zip"
     fi
 }
 
 # Installs latest awsume
 install_awsume() {
-    if found_cmd awsume; then
-        echo_task "Package already installed: awsume"
+    local -r pkg="awsume"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: awsume"
-    pip install awsume
+    echo_task "Installing package: ${pkg} for legacy python"
+    pip install "${pkg}"
+
+    echo_task "Installing package: ${pkg} for python3"
+    pip3 install "${pkg}"
 }
 
 # One-click installation of a speficied version of the chefdk
 install_chef() {
-    if found_cmd knife; then
-        echo_task "Package already installed: chefdk"
+    local -r pkg="chefdk"
+    local -r pkg_cmd="knife"
+    local -r pkg_version="15.3.14"
+
+    if found_cmd ${pkg_cmd}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: chefdk"
-    curl -s -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v 15.3.14
+    echo_task "Installing package: ${pkg}"
+    curl -s -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v ${pkg_version}
 }
 
 # One-click installation of the latest docker
 install_docker() {
     local -r pkg="docker"
-    local -r install_script="${HOME}/get-docker.sh"
+    local -r pkg_script="${get-docker.sh}"
 
     if found_cmd "${pkg}"; then
         echo_task "Package already installed: ${pkg}"
@@ -137,15 +150,15 @@ install_docker() {
     fi
 
     echo_task "Installing package: ${pkg}"
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sh get-docker.sh
+    curl -fsSL https://get.docker.com -o ${pkg_script}
+    sh ${pkg_script}
 
     echo_task "Adding vagrant user to docker group"
     sudo usermod -aG docker vagrant
 
-    if found_file "${install_script}"; then
+    if found_file "${pkg_script}"; then
         echo_task "Removing installation script for: ${pkg}"
-        rm -fv "${install_script}"
+        rm -fv "${pkg_script}"
     fi
 }
 
@@ -170,16 +183,19 @@ install_docker-compose() {
 
 # One-click installation of latest golang
 install_golang() {
-    if found_dir "${HOME}/.go"; then
-        echo_task "Package already installed: golang"
+    local -r pkg_name="golang"
+    local -r pkg_dir="${HOME}/.go"
+
+    if found_dir ${pkg_dir}; then
+        echo_task "Package already installed: ${pkg_name}"
         return
     fi
 
-    echo_task "Installing package: golang"
+    echo_task "Installing package: ${pkg_name}"
     curl -s https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh | bash &> /dev/null
 
-    echo_task "Writing Golang configuration to ${ZSHRC}"
-    echo '# GoLang' >> "${ZSHRC}"
+    echo_task "Writing ${pkg} configuration to ${ZSHRC}"
+    echo '# For Golang' >> "${ZSHRC}"
     echo 'export GOROOT=${HOME}/.go' >> "${ZSHRC}"
     echo 'export PATH=$GOROOT/bin:$PATH' >> "${ZSHRC}"
     echo 'export GOPATH=${HOME}/go' >> "${ZSHRC}"
@@ -188,46 +204,52 @@ install_golang() {
 
 # Installs latest version of kubernetes (via apt)
 install_kubernetes() {
+    local -r pkg="kubectl"
     local -r K8_version="1.6.0"
 
-    if found_cmd kubectl; then
-        echo_task "Package already installed: kubectl"
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: kubectl"
+    echo_task "Installing package: ${pkg}"
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
     sudo apt-get update -qq
-    sudo apt-get install -y -qq kubectl
+    sudo apt-get install -y -qq ${pkg}
 }
 
 # Installs latest version of minikube
 install_minikube() {
-    if found_cmd minikube; then
-        echo_task "Package already installed: minikube"
+    local -r pkg="minikube"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: minikube"
+    echo_task "Installing package: ${pkg}"
     wget -q https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
     chmod 755 minikube-linux-amd64
-    sudo mv -v minikube-linux-amd64 /usr/local/bin/minikube
+    sudo mv -v minikube-linux-amd64 /usr/local/bin/${pkg}
 }
 
 # Installs Oh-My-Zsh
 install_ohmyzsh() {
-    if found_dir "${HOME}/.oh-my-zsh"; then
-        echo_task "Package already installed: oh-my-zsh"
+    local -r pkg="oh-my-zsh"
+    local -r pkg_dir="${HOME}/.${pkg}"
+
+    if found_dir "${pkg_dir}"; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: oh-my-zsh"
+    echo_task "Installing package: ${pkg}"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
 
     echo_task "Installing plugin packages: zsh-syntax-highlighting, zsh-autosuggestions"
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${pkg_dir}/custom/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${pkg_dir}/custom/plugins/zsh-autosuggestions
 
     if ! found_file "${ZSHRC}"; then
         error_exit "ERROR: ${ZSHRC} does not exist"
@@ -259,7 +281,7 @@ install_ohmyzsh() {
     done
 }
 
-# Useful SRE packages
+# Required SRE packages
 install_packages() {
     pkgs=(
         apt-file
@@ -324,30 +346,36 @@ install_packages() {
 
 # One-click intallation for specified version of Packer
 install_packer() {
-    if found_cmd packer; then
-        echo_task "Package already installed: packer"
+    local -r pkg="packer"
+    local -r pkg_script="packer-install.sh"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: packer"
+    echo_task "Installing package: ${pkg}"
     curl -s -LO https://raw.github.com/robertpeteuil/packer-installer/master/packer-install.sh
-    chmod u+x packer-install.sh
-    ./packer-install.sh -a
+    chmod u+x ${pkg_script}
+    ./${pkg_script} -a
 
-    if found_file "${HOME}/packer-install.sh"; then
-        echo_task "Removing installation script for: packer"
-        rm -fv packer-install.sh
+    if found_file "${HOME}/${pkg_script}"; then
+        echo_task "Removing installation script for: ${pkg}"
+        rm -fv ${pkg_script}
     fi
 }
 
 # One-click installation of pyenv
 install_pyenv() {
-    if found_dir "${PYENV_ROOT}"; then
-        echo_task "Package already installed: pyenv"
+    local -r pkg="pyenv"
+    local -r pkg_dir="${HOME}/.${pkg}"
+
+    if found_dir "${pkg_dir}"; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: pyenv"
+    echo_task "Installing package: ${pkg}"
     curl -s https://pyenv.run | bash
 
     # fix for SHELL initialization scripts
@@ -357,55 +385,52 @@ install_pyenv() {
             error_exit "ERROR: ${i} does not exist"
         fi
 
-        echo_task "Writing pyenv configuration to: ${i}"
+        echo_task "Writing ${pkg} configuration to: ${i}"
         echo "" >> "${i}"
-        echo "# For pyenv" >> "${i}"
-        echo "export PATH=\"${PYENV_ROOT}/bin:\$PATH\"" >> "${i}"
+        echo "# For ${pkg}" >> "${i}"
+        echo "export PATH=\"${pkg_dir}/bin:\$PATH\"" >> "${i}"
         echo "eval \"\$(pyenv init -)\"" >> "${i}"
         echo "eval \"\$(pyenv virtualenv-init -)\"" >> "${i}"
         echo "" >> "${i}"
     done
 }
 
-# DESC: Replaces a line (in place) in a specified file with specified text
-# ARGS: $1 (REQ): original line of text
-#       $2 (REQ): new line of text
-#       $3 (REQ): specified file
-# OUT:  NONE
-replace_line() {
-    sed -i "s/${1}/${2}/g" "${3}"
-}
-
 # One-click installer for specified version of Terraform
 install_terraform() {
-    if found_cmd terraform; then
-        echo_task "Package already installed: terraform"
+    local -r pkg="terraform"
+    local -r pkg_script="terraform-install.sh"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: terraform"
+    echo_task "Installing package: ${pkg}"
     curl -s -LO https://raw.github.com/robertpeteuil/terraform-installer/master/terraform-install.sh
-    chmod u+x terraform-install.sh
-    ./terraform-install.sh -a -i 0.11.11
+    chmod u+x ${pkg_script}
+    ./${pkg_script} -a -i 0.11.11
 
-    if found_file "${HOME}/terraform-install.sh"; then
-        echo_task "Removing installation script for: terraform"
-        rm -fv terraform-install.sh
+    if found_file "${HOME}/${pkg_script}"; then
+        echo_task "Removing installation script for: ${pkg}"
+        rm -fv ${pkg_script}
     fi
 }
 
 # Installs Ultimate vimrc
 install_vimrc() {
-    if found_dir "${HOME}/.vim_runtime"; then
-        echo_task "Package already installed: Ultimate .vimrc"
+    local -r pkg_name="Ultimate .vimrc"
+    local -r pkg_dir="${HOME}/.vim_runtime"
+
+    if found_dir "${pkg_dir}"; then
+        echo_task "Package already installed: ${pkg_name}"
         return
     fi
 
-    echo_task "Installing package: Ultimate .vimrc"
-    git clone --depth=1 https://github.com/amix/vimrc.git "${HOME}/.vim_runtime"
-    sh "${HOME}/.vim_runtime"/install_awesome_vimrc.sh
+    echo_task "Installing package: ${pkg_name}"
+    git clone --depth=1 https://github.com/amix/vimrc.git "${pkg_dir}"
+    sh "${pkg_dir}"/install_awesome_vimrc.sh
 
-    local -r my_configs="${HOME}/.vim_runtime/my_configs.vim"
+    local -r my_configs="${pkg_dir}/my_configs.vim"
     echo_task "Disabling section folding in: ${my_configs}"
     touch "${my_configs}"
     echo 'set nofoldenable' > "${my_configs}"
@@ -417,25 +442,27 @@ install_vimrc() {
             error_exit "ERROR: ${i} does not exist"
         fi
 
-        echo_task "Writing Ultimate Vimrc update alias to: ${i}"
+        echo_task "Writing ${pkg_name} update alias to: ${i}"
         echo "" >> "${i}"
-        echo "# For Ultimate Vimrc" >> "${i}"
+        echo "# For ${pkg_name}" >> "${i}"
         echo 'alias vimrc_update="pushd ${HOME}/.vim_runtime && git pull --rebase && popd"' >> "${i}"
     done
 }
 
 # Installs zsh-nvm
 install_zsh-nvm() {
-    local -r NVM_HOME="${HOME}/.zsh-nvm"
+    local -r pkg="zsh-nvm"
+    local -r pkg_dir="${HOME}/.${pkg}"
 
-    if found_dir "${NVM_HOME}"; then
-        echo_task "Package already instavaled: zsh-nvm"
+    if found_dir "${pkg_dir}"; then
+        echo_task "Package already instavaled: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: zsh-nvm"
-    git clone https://github.com/lukechilds/zsh-nvm.git "${NVM_HOME}"
+    echo_task "Installing package: ${pkg}"
+    git clone https://github.com/lukechilds/zsh-nvm.git "${pkg_dir}"
 
+    ### NOTE: this only works in ZSH ###
     # write configuration to SHELL initialization script
     if ! found_file "${ZSHRC}"; then
         error_exit "ERROR: ${ZSHRC} does not exist"
@@ -444,10 +471,10 @@ install_zsh-nvm() {
     echo_task "Writing additional configuration to: ${ZSHRC}"
     echo "" >> "${ZSHRC}"
     echo "" >> "${ZSHRC}"
-    echo "# For nvm" >> "${ZSHRC}"
-    echo "source ${HOME}/.zsh-nvm/zsh-nvm.plugin.zsh" >> "${ZSHRC}"
+    echo "# For ${pkg}" >> "${ZSHRC}"
+    echo "source ${pkg_dir}/zsh-nvm.plugin.zsh" >> "${ZSHRC}"
 
-    /usr/bin/zsh -i -c echo " ... installing nvm"
+    /usr/bin/zsh -i -c echo " ... installing ${pkg}"
 }
 
 # Changes the default shell to ZSH
@@ -464,52 +491,61 @@ modify_shell() {
     sudo usermod -s ${new_shell} ${USER}
 }
 
+# DESC: Replaces a line (in place) in a specified file with specified text
+# ARGS: $1 (REQ): original line of text
+#       $2 (REQ): new line of text
+#       $3 (REQ): specified file
+# OUT:  NONE
+replace_line() {
+    sed -i "s/${1}/${2}/g" "${3}"
+}
+
 
 # --- Main function -------------------------------------------------------
 main() {
-    echo_header "Installing: specified packages"
+    echo_header "Installing: required packages"
     install_packages
 
     echo_header "Installing: oh-my-zsh"
     install_ohmyzsh
 
-    echo_header "Installing: Ultimate Vimrc"
+    echo_header "Installing: Ultimate .vimrc"
     install_vimrc
 
     echo_header "Installing: pyenv"
     install_pyenv
 
-    echo_header "Installing: Golang"
+    echo_header "Installing: golang"
     install_golang
 
-    echo_header "Installing: Ansible"
+    echo_header "Installing: ansible"
     install_ansible
 
-    echo_header "Installing: Chef"
+    echo_header "Installing: chefdk"
     install_chef
 
-    echo_header "Installing: Docker CE"
+    echo_header "Installing: docker"
     install_docker
 
-    echo_header "Installing: Docker Compose"
+    echo_header "Installing: docker compose"
     install_docker-compose
 
-    echo_header "Installing: Kubernetes"
+    echo_header "Installing: kubernetes"
     install_kubernetes
 
     echo_header "Installing: minikube"
     install_minikube
 
-    echo_header "Installing: Packer"
+    echo_header "Installing: packer"
     install_packer
 
-    echo_header "Installing: Terraform"
+    echo_header "Installing: terraform"
     install_terraform
 
-    echo_header "Installing: Awsume"
+    echo_header "Installing: awsume"
     install_awsume
 
-    echo_header "Installing: AWS CLI"
+    echo_header "Installing: aws-cli"
     install_awscli
 
     echo_header "Installing: zsh-nvm"
