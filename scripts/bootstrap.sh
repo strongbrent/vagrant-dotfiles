@@ -215,15 +215,17 @@ install_kubernetes() {
 
 # Installs latest version of minikube
 install_minikube() {
-    if found_cmd minikube; then
-        echo_task "Package already installed: minikube"
+    local -r pkg="minikube"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: minikube"
+    echo_task "Installing package: ${pkg}"
     wget -q https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
     chmod 755 minikube-linux-amd64
-    sudo mv -v minikube-linux-amd64 /usr/local/bin/minikube
+    sudo mv -v minikube-linux-amd64 /usr/local/bin/${pkg}
 }
 
 # Installs Oh-My-Zsh
