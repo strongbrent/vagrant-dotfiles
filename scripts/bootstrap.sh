@@ -76,7 +76,7 @@ found_file() {
 # Installer for latest Ansible
 install_ansible() {
     if found_cmd ansible; then
-        echo_task "Already installed package: ansible"
+        echo_task "Package already installed: ansible"
         return
     fi
 
@@ -89,7 +89,7 @@ install_ansible() {
 # Installs latest awscli
 install_awscli() {
     if found_cmd aws; then
-        echo_task "Already installed package: awscli"
+        echo_task "Package already installed: awscli"
         return
     fi
 
@@ -107,7 +107,7 @@ install_awscli() {
 # Installs latest awsume
 install_awsume() {
     if found_cmd awsume; then
-        echo_task "Already installed package: awsume"
+        echo_task "Package already installed: awsume"
         return
     fi
 
@@ -128,14 +128,15 @@ install_chef() {
 
 # One-click installation of the latest docker
 install_docker() {
+    local -r pkg="docker"
     local -r install_script="${HOME}/get-docker.sh"
 
-    if found_cmd docker; then
-        echo_task "Package already installed: docker"
+    if found_cmd "${pkg}"; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: docker"
+    echo_task "Installing package: ${pkg}"
     curl -fsSL https://get.docker.com -o get-docker.sh
     sh get-docker.sh
 
@@ -143,9 +144,28 @@ install_docker() {
     sudo usermod -aG docker vagrant
 
     if found_file "${install_script}"; then
-        echo_task "Removing installation script for: docker"
+        echo_task "Removing installation script for: ${pkg}"
         rm -fv "${install_script}"
     fi
+}
+
+# One-click installation of the latest docker-compose
+install_docker-compose() {
+    local -r pkg="docker-compose"
+
+    if found_cmd "${pkg}"; then
+        echo_task "Package already installed: ${pkg}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg}"
+    curl -s https://api.github.com/repos/docker/compose/releases/latest \
+        | grep browser_download_url \
+        | grep docker-compose-Linux-x86_64 \
+        | cut -d '"' -f 4 \
+        | wget -qi -
+    chmod +x docker-compose-Linux-x86_64
+    sudo mv docker-compose-Linux-x86_64 /usr/local/bin/${pkg}
 }
 
 # One-click installation of latest golang
@@ -430,6 +450,20 @@ install_zsh-nvm() {
     /usr/bin/zsh -i -c echo " ... installing nvm"
 }
 
+# Changes the default shell to ZSH
+modify_shell() {
+    local -r current_shell=$(echo ${SHELL})
+    local -r new_shell="/bin/zsh"
+
+    if [ ${current_shell} == ${new_shell} ]; then
+        echo_task "Shell is already set to use: ${current_shell}"
+        return
+    fi
+
+    echo_task "Setting SHELL to use: ${new_shell}"
+    sudo usermod -s ${new_shell} ${USER}
+}
+
 
 # --- Main function -------------------------------------------------------
 main() {
@@ -457,6 +491,9 @@ main() {
     echo_header "Installing: Docker CE"
     install_docker
 
+    echo_header "Installing: Docker Compose"
+    install_docker-compose
+
     echo_header "Installing: Kubernetes"
     install_kubernetes
 
@@ -479,7 +516,7 @@ main() {
     install_zsh-nvm
 
     echo_header "Switching Default Shell: zsh"
-    sudo usermod -s /usr/bin/zsh ${USER}
+    modify_shell
 }
 
 main "$@"
