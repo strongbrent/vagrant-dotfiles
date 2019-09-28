@@ -2,7 +2,6 @@
 
 # Global Variables
 export DEBIAN_FRONTEND=noninteractive
-PYENV_ROOT="${HOME}/.pyenv"
 BASHRC="${HOME}/.bashrc"
 ZSHRC="${HOME}/.zshrc"
 
@@ -124,10 +123,11 @@ install_awsume() {
 
 # One-click installation of a speficied version of the chefdk
 install_chef() {
-    local -r pkg="${pkg}"
+    local -r pkg="chefdk"
+    local -r pkg_cmd="knife"
     local -r pkg_version="15.3.14"
 
-    if found_cmd knife; then
+    if found_cmd ${pkg_cmd}; then
         echo_task "Package already installed: ${pkg}"
         return
     fi
@@ -358,12 +358,15 @@ install_packer() {
 
 # One-click installation of pyenv
 install_pyenv() {
-    if found_dir "${PYENV_ROOT}"; then
-        echo_task "Package already installed: pyenv"
+    local -r pkg="pyenv"
+    local -r pkg_dir="${HOME}/.${pkg}"
+
+    if found_dir "${pkg_dir}"; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: pyenv"
+    echo_task "Installing package: ${pkg}"
     curl -s https://pyenv.run | bash
 
     # fix for SHELL initialization scripts
@@ -373,10 +376,10 @@ install_pyenv() {
             error_exit "ERROR: ${i} does not exist"
         fi
 
-        echo_task "Writing pyenv configuration to: ${i}"
+        echo_task "Writing ${pkg} configuration to: ${i}"
         echo "" >> "${i}"
-        echo "# For pyenv" >> "${i}"
-        echo "export PATH=\"${PYENV_ROOT}/bin:\$PATH\"" >> "${i}"
+        echo "# For ${pkg}" >> "${i}"
+        echo "export PATH=\"${pkg_dir}/bin:\$PATH\"" >> "${i}"
         echo "eval \"\$(pyenv init -)\"" >> "${i}"
         echo "eval \"\$(pyenv virtualenv-init -)\"" >> "${i}"
         echo "" >> "${i}"
