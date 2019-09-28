@@ -412,16 +412,19 @@ install_terraform() {
 
 # Installs Ultimate vimrc
 install_vimrc() {
-    if found_dir "${HOME}/.vim_runtime"; then
-        echo_task "Package already installed: Ultimate .vimrc"
+    local -r pkg_name="Ultimate .vimrc"
+    local -r pkg_dir="${HOME}/.vim_runtime"
+
+    if found_dir "${pkg_dir}"; then
+        echo_task "Package already installed: ${pkg_name}"
         return
     fi
 
-    echo_task "Installing package: Ultimate .vimrc"
-    git clone --depth=1 https://github.com/amix/vimrc.git "${HOME}/.vim_runtime"
-    sh "${HOME}/.vim_runtime"/install_awesome_vimrc.sh
+    echo_task "Installing package: ${pkg_name}"
+    git clone --depth=1 https://github.com/amix/vimrc.git "${pkg_dir}"
+    sh "${pkg_dir}"/install_awesome_vimrc.sh
 
-    local -r my_configs="${HOME}/.vim_runtime/my_configs.vim"
+    local -r my_configs="${pkg_dir}/my_configs.vim"
     echo_task "Disabling section folding in: ${my_configs}"
     touch "${my_configs}"
     echo 'set nofoldenable' > "${my_configs}"
