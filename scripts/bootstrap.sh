@@ -124,13 +124,16 @@ install_awsume() {
 
 # One-click installation of a speficied version of the chefdk
 install_chef() {
+    local -r pkg="${pkg}"
+    local -r pkg_version="15.3.14"
+
     if found_cmd knife; then
-        echo_task "Package already installed: chefdk"
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: chefdk"
-    curl -s -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v 15.3.14
+    echo_task "Installing package: ${pkg}"
+    curl -s -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v ${pkg_version}
 }
 
 # One-click installation of the latest docker
