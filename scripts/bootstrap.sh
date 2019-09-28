@@ -139,7 +139,7 @@ install_chef() {
 # One-click installation of the latest docker
 install_docker() {
     local -r pkg="docker"
-    local -r install_script="${HOME}/get-docker.sh"
+    local -r install_script="${get-docker.sh}"
 
     if found_cmd "${pkg}"; then
         echo_task "Package already installed: ${pkg}"
@@ -147,8 +147,8 @@ install_docker() {
     fi
 
     echo_task "Installing package: ${pkg}"
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sh get-docker.sh
+    curl -fsSL https://get.docker.com -o ${install_script}
+    sh ${install_script}
 
     echo_task "Adding vagrant user to docker group"
     sudo usermod -aG docker vagrant
