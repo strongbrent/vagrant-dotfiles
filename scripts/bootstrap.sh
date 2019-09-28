@@ -117,8 +117,11 @@ install_awsume() {
         return
     fi
 
-    echo_task "Installing package: ${pkg}"
+    echo_task "Installing package: ${pkg} for legacy python"
     pip install "${pkg}"
+
+    echo_task "Installing package: ${pkg} for python3"
+    pip3 install "${pkg}"
 }
 
 # One-click installation of a speficied version of the chefdk
@@ -181,7 +184,7 @@ install_docker-compose() {
 # One-click installation of latest golang
 install_golang() {
     local -r pkg_name="golang"
-    local -r pkg_dir="${HOME/.go}"
+    local -r pkg_dir="${HOME}/.go"
 
     if found_dir ${pkg_dir}; then
         echo_task "Package already installed: ${pkg_name}"
@@ -278,7 +281,7 @@ install_ohmyzsh() {
     done
 }
 
-# Useful SRE packages
+# Required SRE packages
 install_packages() {
     pkgs=(
         apt-file
@@ -392,15 +395,6 @@ install_pyenv() {
     done
 }
 
-# DESC: Replaces a line (in place) in a specified file with specified text
-# ARGS: $1 (REQ): original line of text
-#       $2 (REQ): new line of text
-#       $3 (REQ): specified file
-# OUT:  NONE
-replace_line() {
-    sed -i "s/${1}/${2}/g" "${3}"
-}
-
 # One-click installer for specified version of Terraform
 install_terraform() {
     local -r pkg="terraform"
@@ -448,25 +442,27 @@ install_vimrc() {
             error_exit "ERROR: ${i} does not exist"
         fi
 
-        echo_task "Writing Ultimate Vimrc update alias to: ${i}"
+        echo_task "Writing ${pkg_name} update alias to: ${i}"
         echo "" >> "${i}"
-        echo "# For Ultimate Vimrc" >> "${i}"
+        echo "# For ${pkg_name}" >> "${i}"
         echo 'alias vimrc_update="pushd ${HOME}/.vim_runtime && git pull --rebase && popd"' >> "${i}"
     done
 }
 
 # Installs zsh-nvm
 install_zsh-nvm() {
-    local -r NVM_HOME="${HOME}/.zsh-nvm"
+    local -r pkg="zsh-nvm"
+    local -r pkg_dir="${HOME}/.${pkg}"
 
-    if found_dir "${NVM_HOME}"; then
-        echo_task "Package already instavaled: zsh-nvm"
+    if found_dir "${pkg_dir}"; then
+        echo_task "Package already instavaled: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: zsh-nvm"
-    git clone https://github.com/lukechilds/zsh-nvm.git "${NVM_HOME}"
+    echo_task "Installing package: ${pkg}"
+    git clone https://github.com/lukechilds/zsh-nvm.git "${pkg_dir}"
 
+    ### NOTE: this only works in ZSH ###
     # write configuration to SHELL initialization script
     if ! found_file "${ZSHRC}"; then
         error_exit "ERROR: ${ZSHRC} does not exist"
@@ -475,10 +471,10 @@ install_zsh-nvm() {
     echo_task "Writing additional configuration to: ${ZSHRC}"
     echo "" >> "${ZSHRC}"
     echo "" >> "${ZSHRC}"
-    echo "# For nvm" >> "${ZSHRC}"
-    echo "source ${HOME}/.zsh-nvm/zsh-nvm.plugin.zsh" >> "${ZSHRC}"
+    echo "# For ${pkg}" >> "${ZSHRC}"
+    echo "source ${pkg_dir}/zsh-nvm.plugin.zsh" >> "${ZSHRC}"
 
-    /usr/bin/zsh -i -c echo " ... installing nvm"
+    /usr/bin/zsh -i -c echo " ... installing ${pkg}"
 }
 
 # Changes the default shell to ZSH
@@ -495,11 +491,20 @@ modify_shell() {
     sudo usermod -s ${new_shell} ${USER}
 }
 
+# DESC: Replaces a line (in place) in a specified file with specified text
+# ARGS: $1 (REQ): original line of text
+#       $2 (REQ): new line of text
+#       $3 (REQ): specified file
+# OUT:  NONE
+replace_line() {
+    sed -i "s/${1}/${2}/g" "${3}"
+}
+
 
 # --- Main function -------------------------------------------------------
 main() {
     echo_header "Installing: required packages"
-    #install_packages
+    install_packages
 
     echo_header "Installing: oh-my-zsh"
     install_ohmyzsh
