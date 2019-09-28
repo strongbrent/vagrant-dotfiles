@@ -403,19 +403,22 @@ replace_line() {
 
 # One-click installer for specified version of Terraform
 install_terraform() {
-    if found_cmd terraform; then
-        echo_task "Package already installed: terraform"
+    local -r pkg="terraform"
+    local -r pkg_script="terraform-install.sh"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: terraform"
+    echo_task "Installing package: ${pkg}"
     curl -s -LO https://raw.github.com/robertpeteuil/terraform-installer/master/terraform-install.sh
-    chmod u+x terraform-install.sh
-    ./terraform-install.sh -a -i 0.11.11
+    chmod u+x ${pkg_script}
+    ./${pkg_script} -a -i 0.11.11
 
-    if found_file "${HOME}/terraform-install.sh"; then
-        echo_task "Removing installation script for: terraform"
-        rm -fv terraform-install.sh
+    if found_file "${HOME}/${pkg_script}"; then
+        echo_task "Removing installation script for: ${pkg}"
+        rm -fv ${pkg_script}
     fi
 }
 
