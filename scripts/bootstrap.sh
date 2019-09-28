@@ -230,17 +230,20 @@ install_minikube() {
 
 # Installs Oh-My-Zsh
 install_ohmyzsh() {
-    if found_dir "${HOME}/.oh-my-zsh"; then
-        echo_task "Package already installed: oh-my-zsh"
+    local -r pkg="oh-my-zsh"
+    local -r pkg_dir="${HOME}/.${pkg}"
+
+    if found_dir "${pkg_dir}"; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: oh-my-zsh"
+    echo_task "Installing package: ${pkg}"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
 
     echo_task "Installing plugin packages: zsh-syntax-highlighting, zsh-autosuggestions"
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${pkg_dir}/custom/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${pkg_dir}/custom/plugins/zsh-autosuggestions
 
     if ! found_file "${ZSHRC}"; then
         error_exit "ERROR: ${ZSHRC} does not exist"
