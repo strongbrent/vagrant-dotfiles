@@ -111,13 +111,15 @@ install_awscli() {
 
 # Installs latest awsume
 install_awsume() {
-    if found_cmd awsume; then
-        echo_task "Package already installed: awsume"
+    local -r pkg="awsume"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: awsume"
-    pip install awsume
+    echo_task "Installing package: ${pkg}"
+    pip install "${pkg}"
 }
 
 # One-click installation of a speficied version of the chefdk
