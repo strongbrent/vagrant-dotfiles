@@ -198,18 +198,19 @@ install_golang() {
 
 # Installs latest version of kubernetes (via apt)
 install_kubernetes() {
+    local -r pkg="kubectl"
     local -r K8_version="1.6.0"
 
-    if found_cmd kubectl; then
-        echo_task "Package already installed: kubectl"
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: kubectl"
+    echo_task "Installing package: ${pkg}"
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
     sudo apt-get update -qq
-    sudo apt-get install -y -qq kubectl
+    sudo apt-get install -y -qq ${pkg}
 }
 
 # Installs latest version of minikube
