@@ -477,6 +477,9 @@ main() {
 
     echo_header "Installing: zsh-nvm"
     install_zsh-nvm
+
+    echo_header "Switching Default Shell: zsh"
+    sudo usermod -s /usr/bin/zsh ${USER}
 }
 
 main "$@"
