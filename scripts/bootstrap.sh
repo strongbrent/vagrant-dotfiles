@@ -180,15 +180,15 @@ install_docker-compose() {
 
 # One-click installation of latest golang
 install_golang() {
-    local -r pkg_name="Golang"
+    local -r pkg_name="golang"
     local -r pkg_dir="${HOME/.go}"
 
     if found_dir ${pkg_dir}; then
-        echo_task "Package already installed: ${pkg}"
+        echo_task "Package already installed: ${pkg_name}"
         return
     fi
 
-    echo_task "Installing package: ${pkg}"
+    echo_task "Installing package: ${pkg_name}"
     curl -s https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh | bash &> /dev/null
 
     echo_task "Writing ${pkg} configuration to ${ZSHRC}"
@@ -498,49 +498,49 @@ modify_shell() {
 
 # --- Main function -------------------------------------------------------
 main() {
-    echo_header "Installing: specified packages"
+    echo_header "Installing: required packages"
     #install_packages
 
     echo_header "Installing: oh-my-zsh"
     install_ohmyzsh
 
-    echo_header "Installing: Ultimate Vimrc"
+    echo_header "Installing: Ultimate .vimrc"
     install_vimrc
 
     echo_header "Installing: pyenv"
     install_pyenv
 
-    echo_header "Installing: Golang"
+    echo_header "Installing: golang"
     install_golang
 
-    echo_header "Installing: Ansible"
+    echo_header "Installing: ansible"
     install_ansible
 
-    echo_header "Installing: Chef"
+    echo_header "Installing: chefdk"
     install_chef
 
-    echo_header "Installing: Docker CE"
+    echo_header "Installing: docker"
     install_docker
 
-    echo_header "Installing: Docker Compose"
+    echo_header "Installing: docker compose"
     install_docker-compose
 
-    echo_header "Installing: Kubernetes"
+    echo_header "Installing: kubernetes"
     install_kubernetes
 
     echo_header "Installing: minikube"
     install_minikube
 
-    echo_header "Installing: Packer"
+    echo_header "Installing: packer"
     install_packer
 
-    echo_header "Installing: Terraform"
+    echo_header "Installing: terraform"
     install_terraform
 
-    echo_header "Installing: Awsume"
+    echo_header "Installing: awsume"
     install_awsume
 
-    echo_header "Installing: AWS CLI"
+    echo_header "Installing: aws-cli"
     install_awscli
 
     echo_header "Installing: zsh-nvm"
