@@ -180,16 +180,19 @@ install_docker-compose() {
 
 # One-click installation of latest golang
 install_golang() {
-    if found_dir "${HOME}/.go"; then
-        echo_task "Package already installed: golang"
+    local -r pkg_name="Golang"
+    local -r pkg_dir="${HOME/.go}"
+
+    if found_dir ${pkg_dir}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: golang"
+    echo_task "Installing package: ${pkg}"
     curl -s https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh | bash &> /dev/null
 
-    echo_task "Writing Golang configuration to ${ZSHRC}"
-    echo '# GoLang' >> "${ZSHRC}"
+    echo_task "Writing ${pkg} configuration to ${ZSHRC}"
+    echo '# For Golang' >> "${ZSHRC}"
     echo 'export GOROOT=${HOME}/.go' >> "${ZSHRC}"
     echo 'export PATH=$GOROOT/bin:$PATH' >> "${ZSHRC}"
     echo 'export GOPATH=${HOME}/go' >> "${ZSHRC}"
