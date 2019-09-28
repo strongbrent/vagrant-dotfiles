@@ -139,7 +139,7 @@ install_chef() {
 # One-click installation of the latest docker
 install_docker() {
     local -r pkg="docker"
-    local -r install_script="${get-docker.sh}"
+    local -r pkg_script="${get-docker.sh}"
 
     if found_cmd "${pkg}"; then
         echo_task "Package already installed: ${pkg}"
@@ -147,15 +147,15 @@ install_docker() {
     fi
 
     echo_task "Installing package: ${pkg}"
-    curl -fsSL https://get.docker.com -o ${install_script}
-    sh ${install_script}
+    curl -fsSL https://get.docker.com -o ${pkg_script}
+    sh ${pkg_script}
 
     echo_task "Adding vagrant user to docker group"
     sudo usermod -aG docker vagrant
 
-    if found_file "${install_script}"; then
+    if found_file "${pkg_script}"; then
         echo_task "Removing installation script for: ${pkg}"
-        rm -fv "${install_script}"
+        rm -fv "${pkg_script}"
     fi
 }
 
@@ -343,19 +343,22 @@ install_packages() {
 
 # One-click intallation for specified version of Packer
 install_packer() {
-    if found_cmd packer; then
-        echo_task "Package already installed: packer"
+    local -r pkg="packer"
+    local -r pkg_script="packer-install.sh"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
         return
     fi
 
-    echo_task "Installing package: packer"
+    echo_task "Installing package: ${pkg}"
     curl -s -LO https://raw.github.com/robertpeteuil/packer-installer/master/packer-install.sh
-    chmod u+x packer-install.sh
-    ./packer-install.sh -a
+    chmod u+x ${pkg_script}
+    ./${pkg_script} -a
 
-    if found_file "${HOME}/packer-install.sh"; then
-        echo_task "Removing installation script for: packer"
-        rm -fv packer-install.sh
+    if found_file "${HOME}/${pkg_script}"; then
+        echo_task "Removing installation script for: ${pkg}"
+        rm -fv ${pkg_script}
     fi
 }
 
