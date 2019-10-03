@@ -285,6 +285,11 @@ install_ohmyzsh() {
             error_exit "ERROR: ${i} does not exist"
         fi
 
+        echo_task "Exporting additional PATH info to: ${i}"
+        echo "" >> "${i}"
+        echo "# My PATH" >> "${i}"
+        echo 'export PATH=${HOME}/bin:${HOME}/.local/bin:${PATH}'
+
         echo_task "Writing additional aliases to: ${i}"
         echo "" >> "${i}"
         echo "# My Aliases" >> "${i}"
