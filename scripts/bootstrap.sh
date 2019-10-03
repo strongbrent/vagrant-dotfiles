@@ -202,6 +202,19 @@ install_golang() {
     echo 'export PATH=$GOPATH/bin:$PATH' >> "${ZSHRC}"
 }
 
+# One-click installation of the Heroku CLI
+install_heroku() {
+    local -r pkg_cmd="heroku"
+
+    if found_cmd ${pkg_cmd}; then
+        echo_task "Package already installed: ${pkg_cmd}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg_cmd}"
+    curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+}
+
 # Installs latest version of kubernetes (via apt)
 install_kubernetes() {
     local -r pkg="kubectl"
@@ -550,6 +563,9 @@ main() {
 
     echo_header "Installing: zsh-nvm"
     install_zsh-nvm
+
+    echo_header "Installing: Heroku CLI"
+    install_heroku
 
     echo_header "Switching Default Shell: zsh"
     modify_shell
