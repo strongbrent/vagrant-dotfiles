@@ -9,6 +9,9 @@ Vagrant.configure("2") do |config|
   ### Forwarded ports ###
   # For Djano
   config.vm.network "forwarded_port", host: 8000, guest: 8000
+  # For Flask
+  config.vm.network "forwarded_port", host: 5000, guest: 5000
+  config.vm.network "forwarded_port", host: 5001, guest: 5001
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
