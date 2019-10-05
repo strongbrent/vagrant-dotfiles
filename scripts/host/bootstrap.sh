@@ -92,17 +92,21 @@ install_packages() {
         curl
         firefox
         gdebi-core
+        linux-headers-generic
         net-tools
         openssh-server
         screen
         snapd
+        terminator
         tlp
         transmission
         tmux
         tree
         unzip
         vagrant
+        vim
         virtualbox
+        virtualbox-dkms
         wget
         zsh
     )
