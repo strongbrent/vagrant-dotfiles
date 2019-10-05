@@ -12,3 +12,9 @@ provision:
 
 host:
 	(cd scripts/host && ./bootstrap.sh)
+
+.PHONY: bin
+
+bin:
+	(cd scripts/bin && ./mk_bin.sh)
+
