@@ -11,4 +11,4 @@ provision:
 .PHONY: host
 
 host:
-	scripts/host/bootstrap.sh
+	(cd scripts/host && ./bootstrap.sh)

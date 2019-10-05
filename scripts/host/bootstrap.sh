@@ -130,7 +130,8 @@ main() {
     ### Get confirmation to proceed ###
     echo "Warning. This script installs software and overwrite files in your HOME directory."
     if ! confirm "Do you with to continue? [y/N] "; then
-        error_exit "Good bye."
+        echo_task "Goodbye"
+	exit
     fi
     ### Get confirmation to proceed ###
 
