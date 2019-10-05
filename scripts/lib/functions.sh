@@ -3,6 +3,13 @@
 # Global Variables
 export DEBIAN_FRONTEND=noninteractive
 BASHRC="${HOME}/.bashrc"
+ZSHRC="${HOME}/.zshrc"
+
+# Global Array
+shell_envs=(
+    "${BASHRC}"
+    "${ZSHRC}"
+)
 
 
 # --- Helper Functions ---------------------------------------------------
