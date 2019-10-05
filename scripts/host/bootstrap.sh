@@ -70,7 +70,7 @@ install_ohmyzsh() {
         echo_task "Exporting additional PATH info to: ${i}"
         echo "" >> "${i}"
         echo "# My PATH" >> "${i}"
-        echo 'export PATH=${HOME}/bin:${HOME}/.local/bin:${PATH}'
+        echo 'export PATH=${HOME}/bin:${HOME}/.local/bin:${PATH}' >> "${i}"
 
         echo_task "Writing additional aliases to: ${i}"
         echo "" >> "${i}"
