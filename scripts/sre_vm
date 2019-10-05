@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+
+# Global Vars
+SRE_VM_DIR="${HOME}/Projects/Vagrant/ubuntu1804_dev"
+
+
+# --- Helper Functions ---------------------------------------------------
+
+# DESC: Prints a header statement to standard out
+# ARGS: S1 (OPT): message string
+# OUT: NONE
+echo_header() {
+    # Function variables/constants
+    local -r pre="===>"
+    local -r msg="${1:-Empty Header}"
+
+    # Run Commands
+    echo ""
+    echo "${pre} ${msg}"
+}
+
+# DESC: Prints a task description
+# ARGS: $1 (OPT): message string
+# OUT:  NONE
+echo_task() {
+    # Function variables/constants
+    local -r pre="....."
+    local -r msg="${1:-Empty task}"
+
+    # Run commands
+    echo "${pre} ${msg}"
+}
+
+# DESC: Safe script exit (copy to libs)
+# ARGS: $1 (OPT): Error message string
+# OUT:  1
+error_exit() {
+    echo "${1:-UNKNOWN ERROR}"
+
+    # handle exits from shell or function but don't exit interactive shell
+    [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+}
+
+# DESC: Checks to see if a directory exists
+# ARGS: $1 (REQ): name of directory
+# OUT:  0  -> if found
+#       !0 -> if not found
+found_dir() {
+    test -d "${1}" &>/dev/null
+}
+
+# DESC: Checks to see if this VM is running
+# OUT:  0  -> if found
+#       !0 -> if not found
+vm_is_running() {
+    local vm_running=""
+
+    if ! found_dir "${SRE_VM_DIR}"; then
+        error_exit "ERROR: ${SRE_VM_DIR} does not exist"
+    fi
+
+    pushd "${SRE_VM_DIR}" &> /dev/null
+    vm_running=$(vagrant status | grep default | awk '{print $2}')
+    popd &> /dev/null
+
+    if [ ! ${vm_running} == 'running' ]; then
+        return 1
+    fi
+
+    return 0
+}
+
+# DESC: Runs a specified Vagrant command
+# ARGS: $1 (REQ): name of vagrant command (up, ssh)
+vm_cmd() {
+    # verify arg 1
+    case ${1} in
+        # execute command
+        ssh | up)
+            echo_task "Executing: vagrant ${1}"
+            pushd "${SRE_VM_DIR}" &> /dev/null
+            vagrant ${1}
+            popd &> /dev/null
+            ;;
+        *)
+            error_exit "ERROR: up and ssh are the only valid vagrant commands"
+    esac
+}
+
+
+# --- Main Function ------------------------------------------------------
+main() {
+    echo_header "Test: SRE VM directory exists..."
+    if ! found_dir "${SRE_VM_DIR}"; then
+        error_exit "ERROR: ${SRE_VM_DIR} does not exist"
+    fi
+
+    echo_header "Test: SRE VM is running..."
+    if ! vm_is_running; then
+        vm_cmd up
+    fi
+
+    echo_header "SSH to SRE VM..."
+    if vm_is_running; then
+        vm_cmd ssh
+    else
+        error_exit "ERROR: VM in ${SRE_VM_DIR} won't start"
+    fi
+}
+
+main "$@"
