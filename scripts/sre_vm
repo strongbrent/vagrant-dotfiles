@@ -2,6 +2,7 @@
 
 # Global Vars
 SRE_VM_DIR="${HOME}/Projects/Vagrant/ubuntu1804_dev"
+readonly SRE_VM_DIR
 
 
 # --- Helper Functions ---------------------------------------------------
