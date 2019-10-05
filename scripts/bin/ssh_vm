@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Global Vars
-SRE_VM_DIR="${HOME}/Projects/Vagrant/ubuntu1804_dev"
-readonly SRE_VM_DIR
+PROJECT_DIR="${HOME}/vagrant-dotfiles"
+readonly PROJECT_DIR
 
 
 # --- Helper Functions ---------------------------------------------------
@@ -56,11 +56,11 @@ found_dir() {
 vm_is_running() {
     local vm_running=""
 
-    if ! found_dir "${SRE_VM_DIR}"; then
-        error_exit "ERROR: ${SRE_VM_DIR} does not exist"
+    if ! found_dir "${PROJECT_DIR}"; then
+        error_exit "ERROR: ${PROJECT_DIR} does not exist"
     fi
 
-    pushd "${SRE_VM_DIR}" &> /dev/null
+    pushd "${PROJECT_DIR}" &> /dev/null
     vm_running=$(vagrant status | grep default | awk '{print $2}')
     popd &> /dev/null
 
@@ -79,7 +79,7 @@ vm_cmd() {
         # execute command
         ssh | up)
             echo_task "Executing: vagrant ${1}"
-            pushd "${SRE_VM_DIR}" &> /dev/null
+            pushd "${PROJECT_DIR}" &> /dev/null
             vagrant ${1}
             popd &> /dev/null
             ;;
@@ -91,21 +91,21 @@ vm_cmd() {
 
 # --- Main Function ------------------------------------------------------
 main() {
-    echo_header "Test: SRE VM directory exists..."
-    if ! found_dir "${SRE_VM_DIR}"; then
-        error_exit "ERROR: ${SRE_VM_DIR} does not exist"
+    echo_header "Test: Project directory exists..."
+    if ! found_dir "${PROJECT_DIR}"; then
+        error_exit "ERROR: ${PROJECT_DIR} does not exist"
     fi
 
-    echo_header "Test: SRE VM is running..."
+    echo_header "Test: Project VM is running..."
     if ! vm_is_running; then
         vm_cmd up
     fi
 
-    echo_header "SSH to SRE VM..."
+    echo_header "SSH to Project VM..."
     if vm_is_running; then
         vm_cmd ssh
     else
-        error_exit "ERROR: VM in ${SRE_VM_DIR} won't start"
+        error_exit "ERROR: VM in ${PROJECT_DIR} won't start"
     fi
 }
 
