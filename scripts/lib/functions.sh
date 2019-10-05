@@ -14,6 +14,24 @@ shell_envs=(
 
 # --- Helper Functions ---------------------------------------------------
 
+# DESC: Prompts the user with Go/No-go question
+# ARGS: $1 (OPT): string representing the question
+#                 - default: Are you sure? [y/N]
+# OUT:  true  -> if Y
+#       false -> if N
+confirm() {
+    # call with a prompt string or use a default
+    read -r -p "${1:-Are you sure? [y/N]} " response
+    case "$response" in
+        [yY][eE][sS]|[yY])
+            true
+            ;;
+        *)
+            false
+            ;;
+    esac
+}
+
 # DESC: Prints a header statement to standard out
 # ARGS: S1 (OPT): message string
 # OUT: NONE
