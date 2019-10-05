@@ -7,3 +7,8 @@ vm:
 
 provision:
 	vagrant provision
+
+.PHONY: host
+
+host:
+	scripts/host/bootstrap.sh
