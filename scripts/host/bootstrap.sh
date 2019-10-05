@@ -7,6 +7,26 @@ source "${parentdir}/lib/functions.sh"
 
 # --- Helper Functions ---------------------------------------------------
 
+# Installs Google Chrome
+install_chrome() {
+    local -r pkg="google-chrome"
+    local -r pkg_file="google-chrome-stable_current_amd64.deb"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg}"
+    curl -O https://dl.google.com/linux/direct/${pkg_file}
+    sudo gdebi ${pkg_file}
+
+    if found_file ${pkg_file}; then
+        echo_task "Removing: ${pkg_file}"
+        rm -f ./${pkg_file}
+    fi
+}
+
 # Installs Oh-My-Zsh
 install_ohmyzsh() {
     local -r pkg="oh-my-zsh"
@@ -70,6 +90,8 @@ install_packages() {
         build-essential
         bzip2
         curl
+        firefox
+        gdebi-core
         net-tools
         openssh-server
         screen
@@ -77,6 +99,8 @@ install_packages() {
         tmux
         tree
         unzip
+        vagrant
+        virtualbox
         wget
         zsh
     )
@@ -123,6 +147,20 @@ install_vimrc() {
     done
 }
 
+# Changes the default shell to ZSH
+modify_shell() {
+    local -r current_shell=$(echo ${SHELL})
+    local -r new_shell="/bin/zsh"
+
+    if [ ${current_shell} == ${new_shell} ]; then
+        echo_task "Shell is already set to use: ${current_shell}"
+        return
+    fi
+
+    echo_task "Setting SHELL to use: ${new_shell}"
+    sudo usermod -s ${new_shell} ${USER}
+}
+
 
 # --- Main Function ------------------------------------------------------
 main() {
@@ -144,14 +182,16 @@ main() {
     echo_header "Installing: Ultimate .vimrc"
     install_vimrc
 
-    echo_header "Installing: VirtualBox"
-    echo_header "Installing: Vagrant"
-    echo_header "Installing: Firefox"
     echo_header "Installing: Chrome"
+    install_chrome
+
     echo_header "Installing: Postman"
     echo_header "Installing: VS Code"
     echo_header "Installing: Slack"
     echo_header "Installing: Spotify"
+
+    echo_header "Switching Default Shell: zsh"
+    modify_shell
 }
 
 main "$@"
