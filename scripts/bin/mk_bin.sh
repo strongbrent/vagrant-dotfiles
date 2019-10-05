@@ -34,7 +34,7 @@ create_dir() {
 
 # --- Main Function ------------------------------------------------------
 main() {
-    local -r bin_name="sre_vm"
+    local -r bin_name="ssh_vm"
     local -r bin_dir="${HOME}/bin"
 
     echo_header "Test Directory: ${bin_dir}"
