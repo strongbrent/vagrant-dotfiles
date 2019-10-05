@@ -33,5 +33,5 @@ Vagrant.configure("2") do |config|
 
   # Custom bootstrap provisioning file.
   config.vm.provision "shell", privileged: false,
-    inline: "/bin/bash /vagrant/scripts/guest/bootstrap.sh"
+    inline: "/bin/bash /vagrant/scripts/guest/bootstrap-vm.sh"
 end
