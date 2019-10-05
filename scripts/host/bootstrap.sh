@@ -95,7 +95,9 @@ install_packages() {
         net-tools
         openssh-server
         screen
+        snapd
         tlp
+        transmission
         tmux
         tree
         unzip
@@ -112,6 +114,22 @@ install_packages() {
         echo_task "Processing package: ${i}"
         sudo apt-get install -y -qq ${i}
     done
+}
+
+# Installs a specified snap package
+install_snap() {
+    if snap list ${1} &> /dev/null; then
+        echo_task "Snap package already installed: ${1}"
+        return
+    fi
+
+    echo_task "Installing snap package: ${1}"
+    if [[ "${2}" == "classic"  ]]; then
+        sudo snap install ${1} --classic
+        return
+    fi
+
+    sudo snap install ${1}
 }
 
 # Installs Ultimate vimrc
@@ -186,9 +204,16 @@ main() {
     install_chrome
 
     echo_header "Installing: Postman"
+    install_snap postman
+
     echo_header "Installing: VS Code"
+    install_snap code classic
+
     echo_header "Installing: Slack"
+    install_snap slack classic
+
     echo_header "Installing: Spotify"
+    install_snap spotify
 
     echo_header "Switching Default Shell: zsh"
     modify_shell
