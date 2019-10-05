@@ -19,7 +19,7 @@ install_chrome() {
 
     echo_task "Installing package: ${pkg}"
     curl -O https://dl.google.com/linux/direct/${pkg_file}
-    sudo gdebi ${pkg_file}
+    sudo gdebi -n ${pkg_file}
 
     if found_file ${pkg_file}; then
         echo_task "Removing: ${pkg_file}"
@@ -92,6 +92,8 @@ install_packages() {
         curl
         firefox
         gdebi-core
+        gnome-shell-extension-gsconnect-browsers
+        gnome-tweaks
         linux-headers-generic
         net-tools
         openssh-server
@@ -102,12 +104,15 @@ install_packages() {
         transmission
         tmux
         tree
+        ubuntu-restricted-addons
+        ubuntu-restricted-extras
         unzip
         vagrant
         vim
         virtualbox
         virtualbox-dkms
         wget
+        youtube-dl
         zsh
     )
 
