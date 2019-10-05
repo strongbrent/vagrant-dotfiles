@@ -7,6 +7,25 @@ source "${parentdir}/lib/functions.sh"
 
 # --- Helper Functions ---------------------------------------------------
 
+# creates a passwordless sudo entry
+create_sudoer() {
+	local -r tmp_path="/tmp/${USER}"
+	local -r sudoers_dir="/etc/sudoers.d"
+	local -r sudoers_path="${sudoers_dir}/${USER}"
+
+	if found_file "${sudoers_path}"; then
+		echo_task "Sudoers file already created: ${sudoers_path}"
+		return
+	fi
+
+	echo_task "Creating sudoers file: ${sudoers_path}"
+	touch "${tmp_path}"
+	chmod 0600 "${tmp_path}"
+	echo "${USER}   ALL=(ALL:ALL) NOPASSWD:ALL" > "${tmp_path}"
+	sudo chown root:root "${tmp_path}"
+	sudo mv "${tmp_path}" ${sudoers_path}
+}
+
 # Installs Google Chrome
 install_chrome() {
     local -r pkg="google-chrome"
@@ -199,6 +218,9 @@ main() {
 	exit
     fi
     ### Get confirmation to proceed ###
+
+    echo_header "Creating: passwordless sudo"
+    create_sudoer
 
     echo_header "Installing: Required Packages"
     install_packages
