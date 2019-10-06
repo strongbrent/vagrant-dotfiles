@@ -10,7 +10,7 @@ source "${parentdir}/lib/functions.sh"
 
 # Configures Gnome Settings
 config_gnome_settings() {
-    local -r gnome_favs="['firefox.desktop', 'google-chrome.desktop', 'terminator.desktop', 'code_code.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Nautilus.desktop', 'gnome-calculator_gnome-calculator.desktop', 'org.gnome.Screenshot.desktop', 'slack_slack.desktop', 'spotify_spotify.desktop', 'virtualbox.desktop', 'transmission-gtk.desktop', 'org.gnome.Software.desktop']"
+    local -r gnome_favs="['firefox.desktop', 'google-chrome.desktop', 'terminator.desktop', 'postman_postman.desktop', 'code_code.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Nautilus.desktop', 'gnome-calculator_gnome-calculator.desktop', 'org.gnome.Screenshot.desktop', 'slack_slack.desktop', 'spotify_spotify.desktop', 'virtualbox.desktop', 'transmission-gtk.desktop', 'org.gnome.Software.desktop']"
 
     # gnome dock favorites
     my_favs=$(gsettings get org.gnome.shell favorite-apps)
@@ -19,6 +19,33 @@ config_gnome_settings() {
     else
         echo_task "Configuring: Gnome Dock Favorites"
         gsettings set org.gnome.shell favorite-apps "${gnome_favs}"
+    fi
+
+    # make the clock show seconds
+    clock_seconds=$(gsettings get org.gnome.desktop.interface clock-show-seconds)
+    if [ "${clock_seconds}" == "true" ]; then
+        echo_task "Already configured: Gnome Desktop Clock - show seconds"
+    else
+        echo_task "Configuring: Gnome Desktop Clock - show seconds"
+        gsettings set org.gnome.desktop.interface clock-show-seconds true
+    fi
+
+    # make the clock show weekdays
+    clock_weekday=$(gsettings get org.gnome.desktop.interface clock-show-weekday)
+    if [ "${clock_weekday}" == "true" ]; then
+        echo_task "Already configured: Gnome Desktop Clock - show weekday"
+    else
+        echo_task "Configuring: Gnome Desktop Clock - show weekday"
+        gsettings set org.gnome.desktop.interface clock-show-weekday true
+    fi
+
+    # make the battery show percentage
+    battery_percentage=$(gsettings get org.gnome.desktop.interface show-battery-percentage)
+    if [ "${battery_percentage}" == "true" ]; then
+        echo_task "Already configured: Gnome Desktop Battery - show percentage"
+    else
+        echo_task "Configuring: Gnome Desktop Battery - show percentage"
+        gsettings set org.gnome.desktop.interface show-battery-percentage true
     fi
 }
 
