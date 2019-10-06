@@ -117,11 +117,11 @@ install_packages() {
         build-essential
         bzip2
         curl
-        dconf-tools
         firefox
         gdebi-core
         gnome-shell-extension-gsconnect-browsers
         gnome-tweaks
+        libglib2.0-bin
         linux-headers-generic
         net-tools
         openssh-server
