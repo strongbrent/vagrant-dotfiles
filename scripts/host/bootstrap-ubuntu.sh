@@ -193,6 +193,26 @@ install_vimrc() {
     done
 }
 
+# Installs VS Code extensions
+install_vs_code_extensions() {
+    exts=(
+        donjayamanne.githistory
+        ms-vscode-remote.vscode-remote-extensionpack
+        yzhang.markdown-all-in-one
+    )
+
+    for i in "${exts[@]}"
+    do
+        if code --list-extensions | grep "${i}" &> /dev/null; then
+            echo_task "VS Code Extension already installed: ${i}"
+            continue
+        fi
+
+        echo_task "Installing VS Code Extension: ${i}"
+        code --install-extension "${i}"
+    done
+}
+
 # Changes the default shell to ZSH
 modify_shell() {
     local -r current_shell=$(echo ${SHELL})
@@ -239,6 +259,9 @@ main() {
 
     echo_header "Installing: VS Code"
     install_snap code classic
+
+    echo_header "Installing: VS Code Extensions"
+    install_vs_code_extensions
 
     echo_header "Installing: Slack"
     install_snap slack classic
