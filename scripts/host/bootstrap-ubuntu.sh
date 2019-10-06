@@ -10,9 +10,16 @@ source "${parentdir}/lib/functions.sh"
 
 # Configures Gnome Settings
 config_gnome_settings() {
-    echo_task "Setting: Gnome Dock Favorites"
-    gsettings set org.gnome.shell favorite-apps ['firefox.desktop', 'google-chrome.desktop', 'terminator.desktop', 'code.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Nautilus.desktop', 'gnome-calculator_gnome-calculator.desktop', 'org.gnome.Screenshot.desktop', 'slack.desktop', 'spotify.desktop', 'virtualbox.desktop', 'transmission-gtk.desktop', 'org.gnome.Software.desktop']
+    local -r gnome_favs="['firefox.desktop', 'google-chrome.desktop', 'terminator.desktop', 'code_code.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Nautilus.desktop', 'gnome-calculator_gnome-calculator.desktop', 'org.gnome.Screenshot.desktop', 'slack_slack.desktop', 'spotify_spotify.desktop', 'virtualbox.desktop', 'transmission-gtk.desktop', 'org.gnome.Software.desktop']"
 
+    # gnome dock favorites
+    my_favs=$(gsettings get org.gnome.shell favorite-apps)
+    if [ "${gnome_favs}" == "${my_favs}" ]; then
+        echo_task "Already configured: Gnome Dock Favorites"
+    else
+        echo_task "Configuring: Gnome Dock Favorites"
+        gsettings set org.gnome.shell favorite-apps "${gnome_favs}"
+    fi
 }
 
 # Creates a passwordless sudo entry
