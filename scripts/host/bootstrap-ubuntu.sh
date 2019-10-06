@@ -5,9 +5,17 @@ parentdir="$(dirname "${dir}")"
 
 source "${parentdir}/lib/functions.sh"
 
+
 # --- Helper Functions ---------------------------------------------------
 
-# creates a passwordless sudo entry
+# Configures Gnome Settings
+config_gnome_settings() {
+    echo_task "Setting: Gnome Dock Favorites"
+    gsettings set org.gnome.shell favorite-apps ['firefox.desktop', 'google-chrome.desktop', 'terminator.desktop', 'code.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Nautilus.desktop', 'gnome-calculator_gnome-calculator.desktop', 'org.gnome.Screenshot.desktop', 'slack.desktop', 'spotify.desktop', 'virtualbox.desktop', 'transmission-gtk.desktop', 'org.gnome.Software.desktop']
+
+}
+
+# Creates a passwordless sudo entry
 create_sudoer() {
 	local -r tmp_path="/tmp/${USER}"
 	local -r sudoers_dir="/etc/sudoers.d"
@@ -109,6 +117,7 @@ install_packages() {
         build-essential
         bzip2
         curl
+        dconf-tools
         firefox
         gdebi-core
         gnome-shell-extension-gsconnect-browsers
@@ -268,6 +277,9 @@ main() {
 
     echo_header "Installing: Spotify"
     install_snap spotify
+
+    echo_header "Configuring: Gnome Setting"
+    config_gnome_settings
 
     echo_header "Switching Default Shell: zsh"
     modify_shell
