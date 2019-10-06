@@ -200,6 +200,11 @@ install_snap() {
         return
     fi
 
+    if [[ "${2}" == "edge"  ]]; then
+        sudo snap install ${1} --edge
+        return
+    fi
+
     sudo snap install ${1}
 }
 
@@ -307,7 +312,7 @@ main() {
     install_vs_code_extensions
 
     echo_header "Installing: Dbeaver"
-    install_snap dbeaver-ce
+    install_snap dbeaver-ce edge
 
     echo_header "Installing: Slack"
     install_snap slack classic
