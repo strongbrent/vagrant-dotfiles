@@ -14,7 +14,7 @@ status:
 .PHONY: host
 
 host:
-	(cd scripts/host && ./bootstrap-ubuntu.sh)
+	(cd scripts/host && ./execute_bootstrap.sh)
 
 .PHONY: bin
 
