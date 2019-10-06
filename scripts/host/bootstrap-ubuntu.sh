@@ -306,6 +306,9 @@ main() {
     echo_header "Installing: VS Code Extensions"
     install_vs_code_extensions
 
+    echo_header "Installing: Dbeaver"
+    install_snap dbeaver-ce
+
     echo_header "Installing: Slack"
     install_snap slack classic
 
