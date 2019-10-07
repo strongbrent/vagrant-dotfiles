@@ -49,6 +49,21 @@ config_gnome_settings() {
     fi
 }
 
+
+# Configure tlp power saver - notebooks
+config_tlp() {
+    local -r chassis=$(sudo dmidecode --string chassis-type)
+
+    if [ "${chassis}" != "Notebook" ]; then
+        echo_task "tlp power saver is only enabled on: Notebooks"
+        return
+    fi
+
+    echo_task "Enabling services for: tlp power saver"
+    sudo systemctl enable tlp.service
+    sudo systemctl enable tlp-sleep.service
+}
+
 # Configure Vboxusers Group
 config_vboxusers() {
     local -r vbu_group="vboxusers"
@@ -341,8 +356,7 @@ main() {
     config_gnome_settings
 
     echo_header "Enabling: tlp power saver"
-    sudo systemctl enable tlp.service
-    sudo systemctl enable tlp-sleep.service
+    config_tlp
 
     echo_header "Switching Default Shell: zsh"
     modify_shell
