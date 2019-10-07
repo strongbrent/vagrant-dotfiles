@@ -49,6 +49,19 @@ config_gnome_settings() {
     fi
 }
 
+# Configure Vboxusers Group
+config_vboxusers() {
+    local -r vbu_group="vboxusers"
+
+    if groups | grep "${vbu_group}" &> /dev/null; then
+        echo_task "${USER} already added to group: ${vbu_group}"
+        return
+    fi
+
+    echo_task "Adding ${USER} to group: ${vbu_group}"
+    sudo usermod -a -G "${vbu_group}" "${USER}"
+}
+
 # Creates a passwordless sudo entry
 create_sudoer() {
 	local -r tmp_path="/tmp/${USER}"
@@ -173,6 +186,7 @@ install_packages() {
         vim
         virtualbox
         virtualbox-dkms
+        virtualbox-ext-pack
         wget
         youtube-dl
         zsh
@@ -319,6 +333,9 @@ main() {
 
     echo_header "Installing: Spotify"
     install_snap spotify
+
+    echo_header "Configuring: Vboxusers Group"
+    config_vboxusers
 
     echo_header "Configuring: Gnome Setting"
     config_gnome_settings
