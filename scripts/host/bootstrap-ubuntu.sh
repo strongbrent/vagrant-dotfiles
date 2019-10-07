@@ -340,6 +340,10 @@ main() {
     echo_header "Configuring: Gnome Setting"
     config_gnome_settings
 
+    echo_header "Enabling: tlp power saver"
+    sudo systemctl enable tlp.service
+    sudo systemctl enable tlp-sleep.service
+
     echo_header "Switching Default Shell: zsh"
     modify_shell
 }
