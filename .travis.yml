@@ -4,4 +4,4 @@ matrix:
       osx_image: xcode11
 
 script:
-  - make host
+  - make host_force
