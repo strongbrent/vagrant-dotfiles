@@ -8,9 +8,16 @@ source "${parentdir}/lib/functions.sh"
 
 # --- Helper Functions ---------------------------------------------------
 
+# Installs Oh-My-Zsh
+install_ohmyzsh() {
+    brew cask install iterm2
+    brew install zsh
+}
+
 # --- Main Function ------------------------------------------------------
 main() {
-    echo_header "Hello from macos"
+    echo_header "Installing: oh-my-zsh"
+    install_ohmyzsh
 }
 
 
