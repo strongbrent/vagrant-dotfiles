@@ -29,7 +29,7 @@ install_packages() {
     for i in "${cask_pkgs[@]}"
     do
         echo_task "Processing cask package: ${i}"
-        brew install -q "${i}"
+        brew cask install -q "${i}"
     done
 }
 
