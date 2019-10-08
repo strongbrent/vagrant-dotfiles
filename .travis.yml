@@ -2,6 +2,7 @@
 branches:
   only:
     - /^macos-.*$/
+    - /^macos_.*$/
 
 matrix:
   include:
