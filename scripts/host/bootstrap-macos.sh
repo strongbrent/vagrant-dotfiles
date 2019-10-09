@@ -234,6 +234,8 @@ install_vimrc() {
 
 # Installs VS Code extensions
 install_vs_code_extensions() {
+    export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+
     exts=(
         donjayamanne.githistory
         ms-vscode-remote.vscode-remote-extensionpack
@@ -250,20 +252,6 @@ install_vs_code_extensions() {
         echo_task "Installing VS Code Extension: ${i}"
         code --install-extension "${i}"
     done
-}
-
-# Changes the default shell to ZSH
-modify_shell() {
-    local -r current_shell=$(echo ${SHELL})
-    local -r new_shell=$(command -v zsh)
-
-    if [ ${current_shell} == ${new_shell} ]; then
-        echo_task "Shell is already set to use: ${current_shell}"
-        return
-    fi
-
-    echo_task "Setting SHELL to use: ${new_shell}"
-    chsh -s "${new_shell}"
 }
 
 
@@ -284,9 +272,6 @@ main() {
 
     echo_header "Installing: VS Code Extensions"
     install_vs_code_extensions
-
-    echo_header "Switching Default Shell: zsh"
-    modify_shell
 }
 
 
