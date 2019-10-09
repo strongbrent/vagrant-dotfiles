@@ -497,7 +497,7 @@ main() {
 
     echo_header "Configuring: Setting Timezone"
     echo_task "Setting Timezone to: America/Vancouver"
-    sudo cp -av /usr/share/zoneinfo/Canada/Pacific /etc/localtime
+    sudo timedatectl set-timezone America/Vancouver
 
     echo_header "Switching Default Shell: zsh"
     modify_shell
