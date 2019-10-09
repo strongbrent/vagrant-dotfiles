@@ -189,13 +189,13 @@ install_packages() {
     for i in "${pkgs[@]}"
     do
         echo_task "Processing brew formula: ${i}"
-        install_brew "${1}"
+        install_brew "${i}"
     done
 
     for i in "${casks[@]}"
     do
         echo_task "Processing brew casks: ${i}"
-        install_brew cask "${1}"
+        install_brew cask "${i}"
     done
 }
 
