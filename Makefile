@@ -11,10 +11,13 @@ provision:
 status:
 	vagrant status
 
-.PHONY: host
+.PHONY: host host_force
 
 host:
 	(cd scripts/host && ./execute_bootstrap.sh)
+
+host_force:
+	(cd scripts/host && ./execute_bootstrap.sh -y)
 
 .PHONY: bin
 

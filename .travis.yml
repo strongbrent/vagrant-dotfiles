@@ -1,0 +1,18 @@
+---
+branches:
+  only:
+    - /^macos-.*$/
+    - /^macos_.*$/
+
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode11
+
+script:
+  # test installation
+  - make host_force
+
+  # test idempotency
+  - make host_force
+

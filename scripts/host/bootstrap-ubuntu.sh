@@ -308,14 +308,6 @@ modify_shell() {
 # --- Main Function ------------------------------------------------------
 main() {
 
-    ### Get confirmation to proceed ###
-    echo "Warning. This script installs software and overwrite files in your HOME directory."
-    if ! confirm "Do you with to continue? [y/N] "; then
-        echo_task "Goodbye"
-	exit
-    fi
-    ### Get confirmation to proceed ###
-
     echo_header "Creating: passwordless sudo"
     create_sudoer
 

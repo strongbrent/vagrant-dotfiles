@@ -11,6 +11,31 @@ export OS_TYPE=$(uname)
 
 # --- Helper Functions ---------------------------------------------------
 
+# DESC: Processes script command line arguments
+# ARGS: $@  : all command line args
+# OUT:  sets: must_confirm
+#             git_branch
+check_cli_args() {
+    while getopts ":hyb:" arg; do
+        case ${arg} in
+            h)
+                # Display help
+                usage
+                exit 0
+                ;;
+            y)
+                # Skip confirmation to proceed
+                must_confirm="yes"
+                ;;
+            \?)
+                usage
+                error_exit "ERROR: incorrect CLI arg"
+                ;;
+        esac
+    done
+    shift $((OPTIND -1))
+}
+
 # DESC: Sets the OS name and version
 # ARGS: ENV OS_TYPE: OS type (Linux or Darwin)
 # OUT:  Exports ID and VERSION_ID variables
@@ -42,10 +67,37 @@ get_distro_info() {
     esac
 }
 
+# DESC: Displays help to the user
+# ARGS: $0 (Special Param): Name of the shell script
+# OUT: NONE
+usage() {
+    # Run commands
+    echo ""
+    echo "Usage: $0 [-h] [-y] [-b <git_branch_name>]"
+    echo "       -h: help   - prints this message"
+    echo "       -y: yes    - auto-install without prompt"
+    echo ""
+}
+
 
 # --- Main Function ------------------------------------------------------
 main() {
+    # main function variables
+    must_confirm="no"
     local bootstrap=""
+
+    # Check CLI args
+    check_cli_args "$@"
+
+    ### Get confirmation to proceed ###
+    if [[ ! ${must_confirm} == "yes" ]]; then
+        echo_header "Getting confirmation to proceed"
+        echo "Warning. This script installs software and overwrite files in your HOME directory."
+        if ! confirm "Do you with to continue? [y/N] "; then
+            error_exit "Good bye."
+        fi
+    fi
+    ### Get confirmation to proceed ###
 
     echo_header "Processing: OS and Distro Information"
     get_distro_info
