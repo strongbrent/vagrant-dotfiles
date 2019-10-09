@@ -17,6 +17,51 @@ shell_envs=(
 
 # --- Helper Functions ---------------------------------------------------
 
+# Configures dock settings
+configure_dock() {
+    # move dock to the left
+    defaults write com.apple.dock orientation left
+
+    # set minimization effect ('genie', 'scale', 'suck')
+    defaults write com.apple.dock mineffect -string 'genie'
+
+    # set icon size of Dock items
+    defaults write com.apple.dock tilesize -int 46
+
+    # set dock magnification
+    defaults write com.apple.dock magnification -bool true
+    defaults write com.apple.dock largesize -int 64
+
+    # Double-click a window's title bar to:
+    # None
+    # Mimimize
+    # Maximize (zoom)
+    defaults write NSGlobalDomain AppleActionOnDoubleClick -string "Maximize"
+
+    # Minimize to application
+    defaults write com.apple.dock minimize-to-application -bool true
+
+    # Automatically hide and show the Dock
+    defaults write com.apple.dock autohide -bool true
+
+    # Auto-hide delay
+    defaults write com.apple.dock autohide-delay -float 0
+
+    # Auto-hide animation duration
+    # defaults write com.apple.dock autohide-time-modifier -float 0
+
+    # Spring loaded Dock items
+    defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
+
+    # Show indicator lights for open applications
+    defaults write com.apple.dock show-process-indicators -bool true
+
+    # see: https://stackoverflow.com/questions/23069864/adding-applications-to-dock-through-terminal
+
+    #restart dock
+    killall Dock
+}
+
 # Creates a passwordless sudo entry
 create_sudoer() {
     local -r tmp_path="/tmp/${USER}"
@@ -272,6 +317,9 @@ main() {
 
     echo_header "Installing: VS Code Extensions"
     install_vs_code_extensions
+
+    echo_header "Configuring: Dock Settings"
+    configure_dock
 }
 
 
