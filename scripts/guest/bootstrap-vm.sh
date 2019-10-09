@@ -495,6 +495,10 @@ main() {
     echo_header "Installing: Heroku CLI"
     install_heroku
 
+    echo_header "Configuring: Setting Timezone"
+    echo_task "Setting Timezone to: America/Vancouver"
+    sudo cp -av /usr/share/zoneinfo/Canada/Pacific /etc/localtime
+
     echo_header "Switching Default Shell: zsh"
     modify_shell
 }
