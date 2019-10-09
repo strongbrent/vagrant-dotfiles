@@ -63,7 +63,7 @@ install_brew() {
         fi
 
         echo_task "Installing brew cask: ${2}"
-        brew install "${2}"
+        brew cask install "${2}"
         return
     fi
 
