@@ -337,12 +337,6 @@ main() {
 
     echo_header "Configuring: Dock Settings"
     configure_dock
-
-    echo_header "Tidying up..."
-    brew linkapps
-    brew cleanup
-    brew prune
-    brew cask cleanup
 }
 
 
