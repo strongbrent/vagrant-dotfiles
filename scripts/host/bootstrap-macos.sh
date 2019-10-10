@@ -76,7 +76,7 @@ configure_dock() {
     dockutil --add '~/Downloads' --view grid --display folder --allhomes
 
     #restart dock
-    killall Dock
+    #killall Dock
 }
 
 # Creates a passwordless sudo entry
