@@ -19,16 +19,17 @@ shell_envs=(
 
 # Configures dock settings
 configure_dock() {
-    # Move dock to the left
+    echo_task "Moving dock to the left"
     defaults write com.apple.dock orientation left
 
-    # Set minimization effect ('genie', 'scale', 'suck')
+    # ('genie', 'scale', 'suck')
+    echo_task "Setting dock minimizing effect"
     defaults write com.apple.dock mineffect -string 'genie'
 
-    # Set icon size of Dock items
+    echo_task "Setting dock icon size"
     defaults write com.apple.dock tilesize -int 46
 
-    # Set dock magnification
+    echo_task "Setting dock magnification"
     defaults write com.apple.dock magnification -bool true
     defaults write com.apple.dock largesize -int 64
 
@@ -36,27 +37,28 @@ configure_dock() {
     # None
     # Mimimize
     # Maximize (zoom)
+    echo_task "Setting action for: double-click window's title bar"
     defaults write NSGlobalDomain AppleActionOnDoubleClick -string "Maximize"
 
-    # Minimize to application
+    echo_task "Setting action for: minimize to application"
     defaults write com.apple.dock minimize-to-application -bool true
 
-    # Automatically hide and show the Dock
+    echo_task "Setting dock autohide feature"
     defaults write com.apple.dock autohide -bool true
 
-    # Auto-hide delay
+    echo_task "Setting dock autohide delay"
     defaults write com.apple.dock autohide-delay -float 0
 
     # Auto-hide animation duration
     # defaults write com.apple.dock autohide-time-modifier -float 0
 
-    # Spring loaded Dock items
+    echo_task "Setting spring load on all items"
     defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
 
-    # Show indicator lights for open applications
+    echo_task "Setting show process indicators for running apps"
     defaults write com.apple.dock show-process-indicators -bool true
 
-    # Use Dockutil to customize favorites
+    echo_task "Setting dock persistent application icons"
     dockutil --remove all
     dockutil --add /Applications/Launchpad.app
     dockutil --add /Applications/Firefox.app
@@ -74,9 +76,6 @@ configure_dock() {
     dockutil --add /Applications/ --view grid --display folder --allhomes
     dockutil --add '~/Documents' --view grid --display folder --allhomes
     dockutil --add '~/Downloads' --view grid --display folder --allhomes
-
-    #restart dock
-    killall Dock
 }
 
 # Creates a passwordless sudo entry
