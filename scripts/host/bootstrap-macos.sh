@@ -19,16 +19,16 @@ shell_envs=(
 
 # Configures dock settings
 configure_dock() {
-    # move dock to the left
+    # Move dock to the left
     defaults write com.apple.dock orientation left
 
-    # set minimization effect ('genie', 'scale', 'suck')
+    # Set minimization effect ('genie', 'scale', 'suck')
     defaults write com.apple.dock mineffect -string 'genie'
 
-    # set icon size of Dock items
+    # Set icon size of Dock items
     defaults write com.apple.dock tilesize -int 46
 
-    # set dock magnification
+    # Set dock magnification
     defaults write com.apple.dock magnification -bool true
     defaults write com.apple.dock largesize -int 64
 
@@ -56,7 +56,24 @@ configure_dock() {
     # Show indicator lights for open applications
     defaults write com.apple.dock show-process-indicators -bool true
 
-    # see: https://stackoverflow.com/questions/23069864/adding-applications-to-dock-through-terminal
+    # Use Dockutil to customize favorites
+    dockutil --remove all
+    dockutil --add /Applications/Launchpad.app
+    dockutil --add /Applications/Firefox.app
+    dockutil --add /Applications/Google\ Chrome.app
+    dockutil --add /Applications/iTerm.app
+    dockutil --add /Applications/Postman.app
+    dockutil --add /Applications/Visual\ Studio\ Code.app
+    dockutil --add /Applications/TextMate.app
+    dockutil --add /Applications/Calculator.app
+    dockutil --add /Applications/Slack.app
+    dockutil --add /Applications/Spotify.app
+    dockutil --add /Applications/VirtualBox.app
+    dockutil --add /Applications/Transmission.app
+    dockutil --add /Applications/App\ Store.app
+    dockutil --add /Applications/ --view grid --display folder --allhomes
+    dockutil --add '~/Documents' --view grid --display folder --allhomes
+    dockutil --add '~/Downloads' --view grid --display folder --allhomes
 
     #restart dock
     killall Dock
@@ -179,6 +196,7 @@ install_packages() {
         cmake
         coreutils
         curl
+        dockutil
         dos2unix
         fontconfig
         freetype
