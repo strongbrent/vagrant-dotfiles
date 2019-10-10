@@ -1,12 +1,15 @@
 SHELL = /bin/bash
 
-.PHONY: vm provision status
+.PHONY: vm provision reload status
 
 vm:
 	vagrant up
 
 provision:
 	vagrant provision
+
+reload:
+	vagrant reload
 
 status:
 	vagrant status
