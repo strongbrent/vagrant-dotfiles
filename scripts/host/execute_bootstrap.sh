@@ -94,7 +94,8 @@ main() {
         echo_header "Getting confirmation to proceed"
         echo "Warning. This script installs software and overwrite files in your HOME directory."
         if ! confirm "Do you with to continue? [y/N] "; then
-            error_exit "Good bye."
+            echo "Good bye."
+            exit 0
         fi
     fi
     ### Get confirmation to proceed ###
@@ -126,4 +127,3 @@ main() {
 }
 
 main "$@"
-
