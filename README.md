@@ -6,7 +6,7 @@ Configuration management solution used to automate the installation/customizatio
 
 The purpose of this repository is as follows: I want to keep my host operating system and my SRE workstation virtual machine separate and distinct. I want to do ALL of my command-line work from a full blown, LTE, Ubuntu Linux workspace and I want to be able to run graphical tools, such as a web browser or IDE from the host workspace. And I don't want either one to contaminate the other. (Mostly, I don't EVER want to install `npm` on my host operating system because good luck with managing all that mess... and I want to use REAL GNU core utility programs -- not the substandard Mac Os versions.)
 
-Anyhow, the theory behind my solution is sound. Give me a:
+Anyhow, the theory behind my solution seems reasonable. Hand me any of the following hardware devices:
 
 - MacBook
 - Linux Workstation (Ubuntu/Debian only)
@@ -76,3 +76,57 @@ After that, since `${HOME}\bin` is now in your PATH, you can run the following c
 ```
 ssh_vm
 ```
+
+## Overview of Installed Applications
+
+### Host Computer (Ubuntu/Debian)
+
+- [Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh)
+- [The Ultimate vimrc](https://github.com/amix/vimrc)
+- [Firefox](https://www.mozilla.org/en-CA/firefox/new/)
+- [Google Chrome](https://www.google.com/chrome/)
+- [Postman](https://www.getpostman.com/)
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Visual Studio Code Extensions](https://marketplace.visualstudio.com/):
+  - [Git History](https://marketplace.visualstudio.com/items?itemName=donjayamanne.githistory)
+  - [Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
+  - [Markdown All in One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)
+- [DBeaver Community](https://dbeaver.io/)
+- [Slack](https://slack.com/intl/en-ca/)
+- [Spotify](https://www.spotify.com/ca-en/)
+- [Terminator](https://terminator-gtk3.readthedocs.io/en/latest/)
+- [Transmission](https://transmissionbt.com/)
+- [Vagrant](https://www.vagrantup.com/)
+- [VirtualBox](https://www.virtualbox.org/)
+- [VirtualBox Extension Pack](https://download.virtualbox.org/virtualbox/6.0.12/Oracle_VM_VirtualBox_Extension_Pack-6.0.12.vbox-extpack) 
+
+### Host Computer (Mac OS 10.14.X)
+
+- [Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh)
+- [The Ultimate vimrc](https://github.com/amix/vimrc)
+- [DBeaver Community](https://dbeaver.io/)
+- [Firefox](https://www.mozilla.org/en-CA/firefox/new/)
+- iterm2
+- kindle
+- [Postman](https://www.getpostman.com/)
+- robo-3t
+- [Slack](https://slack.com/intl/en-ca/)
+- [Spotify](https://www.spotify.com/ca-en/)
+- [Terminator](https://terminator-gtk3.readthe
+- teamviewer
+- textmate
+- the-unarchiver
+- [Transmission](https://transmissionbt.com/)
+- tunnelblick
+- [Vagrant](https://www.vagrantup.com/)
+- vagrant-manager
+- virtualbox-extension-pack
+- [Visual Studio Code](https://code.visualstudio.com/)
+  - [Git History](https://marketplace.visualstudio.com/items?itemName=donjayamanne.githistory)
+  - [Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
+  - [Markdown All in One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)
+- wireshark
+
+### Ubuntu 18.04 Virtual Machine
+
+TODO
