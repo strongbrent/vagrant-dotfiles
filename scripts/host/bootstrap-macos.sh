@@ -228,6 +228,7 @@ install_packages() {
     casks=(
         dbeaver-community
         firefox
+        google-chrome
         iterm2
         kindle
         postman
@@ -244,6 +245,7 @@ install_packages() {
         virtualbox-extension-pack
         visual-studio-code
         wireshark
+	zoomus
     )
 
     brew update
