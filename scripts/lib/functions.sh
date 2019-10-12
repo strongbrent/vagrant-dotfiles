@@ -97,6 +97,6 @@ found_file() {
 #       $3 (REQ): specified file
 # OUT:  NONE
 replace_line() {
-    sed -i "s/${1}/${2}/g" "${3}"
+    sed -i '' "s/${1}/${2}/g" "${3}"
 }
 
