@@ -335,6 +335,9 @@ main() {
     echo_header "Installing: Dbeaver"
     install_snap dbeaver-ce edge
 
+    echo_header "Installing: Robo 3T"
+    install_snap robo3t-snap
+
     echo_header "Installing: Slack"
     install_snap slack classic
 
