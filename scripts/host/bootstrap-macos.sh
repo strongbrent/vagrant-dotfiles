@@ -163,12 +163,12 @@ install_ohmyzsh() {
     echo_task "Writing zsh theme to: ${ZSHRC}"
     local -r orig_theme='ZSH_THEME="robbyrussell"'
     local -r new_theme='ZSH_THEME="bira"'
-    replace_line "${orig_theme}" "${new_theme}" "${ZSHRC}"
+    replace_line "${orig_theme}" "${new_theme}" "${ZSHRC}" "${OS_TYPE}"
 
     echo_task "Writing plugins to: ${ZSHRC}"
     local -r orig_plugins="plugins=(git)"
     local -r new_plugins="plugins=(git zsh-syntax-highlighting zsh-autosuggestions)"
-    replace_line "${orig_plugins}" "${new_plugins}" "${ZSHRC}"
+    replace_line "${orig_plugins}" "${new_plugins}" "${ZSHRC}" "${OS_TYPE}"
 
     # write additional aliases to SHELL initialization scripts
     for i in "${shell_envs[@]}"
