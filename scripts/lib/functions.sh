@@ -95,8 +95,14 @@ found_file() {
 # ARGS: $1 (REQ): original line of text
 #       $2 (REQ): new line of text
 #       $3 (REQ): specified file
+#       $4 (OPT): specified OS_TYPE (Linux or Darwin)
 # OUT:  NONE
 replace_line() {
+    if [ "${4}" == "Darwin" ]; then
+        sed -i '' "s/${1}/${2}/g" "${3}"
+        return
+    fi
+
     sed -i "s/${1}/${2}/g" "${3}"
 }
 

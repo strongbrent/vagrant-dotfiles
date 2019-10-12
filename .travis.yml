@@ -16,3 +16,9 @@ script:
   # test idempotency
   - make host_force
 
+  # check .zshrc
+  - cat "${HOME}/.zshrc"
+
+  # check .profile
+  - cat "${HOME}/.profile"
+
