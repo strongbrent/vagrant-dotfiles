@@ -183,7 +183,9 @@ install_packages() {
         gdebi-core
         gnome-shell-extension-gsconnect-browsers
         gnome-tweaks
+        libgl1-mesa-glx
         libglib2.0-bin
+        libxcb-xtest0
         linux-headers-generic
         net-tools
         openssh-server
@@ -290,6 +292,23 @@ install_vs_code_extensions() {
     done
 }
 
+# Installs Zoom
+install_zoom() {
+    local -r pkg_name="zoom"
+    local -r pkg_file="zoom_amd64.deb"
+    local -r pkg_url="https://zoom.us/client/latest/${pkg_file}"
+
+    if found_cmd "${pkg_name}"; then
+        echo_task "Package already installed: ${pkg_name}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg_name}"
+    wget -q "${pkg_url}"
+    sudo dpkg -i ./"${pkg_file}"
+    rm -fv "${pkg_file}"
+}
+
 # Changes the default shell to ZSH
 modify_shell() {
     local -r current_shell=$(echo ${SHELL})
@@ -343,6 +362,9 @@ main() {
 
     echo_header "Installing: Spotify"
     install_snap spotify
+
+    echo_header "Installing: Zoom"
+    install_zoom
 
     echo_header "Configuring: Vboxusers Group"
     config_vboxusers
