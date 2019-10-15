@@ -56,6 +56,23 @@ install_awsume() {
     pip3 install "${pkg}"
 }
 
+# Installs AWS IAM Authenticator
+install_aws_iam_authenticator() {
+    local -r pkg_name="AWS IAM Authenticator"
+    local -r pkg_command="aws-iam-authenticator"
+    local -r pkg_url="https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/${pkg_command}"
+
+    if found_cmd "${pkg_command}"; then
+        echo_task "Pakcage already installed: ${pkg_name}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg_name}"
+    curl -o "${pkg_command}" "${pkg_url}"
+    chmod +x ./"${pkg_command}"
+    sudo mv -v ./"${pkg_command}" /usr/local/bin/"${pkg_cmd}"
+}
+
 # One-click installation of a speficied version of the chefdk
 install_chef() {
     local -r pkg="chefdk"
@@ -494,6 +511,9 @@ main() {
 
     echo_header "Installing: Heroku CLI"
     install_heroku
+
+    echo_header "Installing: AWS IAM Authenticator"
+    install_aws_iam_authenticator
 
     echo_header "Configuring: Setting Timezone"
     echo_task "Setting Timezone to: America/Vancouver"
