@@ -151,6 +151,20 @@ install_golang() {
     echo 'export PATH=$GOPATH/bin:$PATH' >> "${ZSHRC}"
 }
 
+# One click installation of helm
+install_helm() {
+    local -r pkg_cmd="helm"
+    local -r pkg_url="https://git.io/get_helm.sh"
+
+    if found_cmd "${pkg_cmd}"; then
+        echo_task "Package already installed: ${pkg_cmd}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg_cmd}"
+    curl -L "${pkg_url}" | bash
+}
+
 # One-click installation of the Heroku CLI
 install_heroku() {
     local -r pkg_cmd="heroku"
@@ -493,6 +507,9 @@ main() {
 
     echo_header "Installing: minikube"
     install_minikube
+
+    echo_header "Installing: helm"
+    install_helm
 
     echo_header "Installing: packer"
     install_packer
