@@ -301,8 +301,10 @@ install_packages() {
         nmap
         openssh-server
         parallel
+        postgresql-client
         python-pip
         python3-pip
+        python3-venv
         ruby-full
         screen
         software-properties-common
