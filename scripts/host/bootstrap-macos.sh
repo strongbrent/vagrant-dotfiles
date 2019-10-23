@@ -230,6 +230,7 @@ install_packages() {
         firefox
         google-chrome
         iterm2
+        java
         kindle
         postman
         robo-3t
@@ -245,7 +246,7 @@ install_packages() {
         virtualbox-extension-pack
         visual-studio-code
         wireshark
-	zoomus
+        zoomus
     )
 
     brew update
