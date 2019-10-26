@@ -130,6 +130,23 @@ install_docker-compose() {
     sudo mv docker-compose-Linux-x86_64 /usr/local/bin/${pkg}
 }
 
+# Installs the latest eksctl
+install_eksctl() {
+    local -r pkg="eksctl"
+    local -r pkg_url="https://github.com/weaveworks/eksctl/releases/download/latest_release"
+    local -r pkg_file="eksctl_$(uname -s)_amd64.tar.gz"
+
+    if found_cmd "${pkg}"; then
+        echo_task "Package already installed: ${pkg}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg}"
+    curl --silent --location "${pkg_url}"/${pkg_file} \
+        | tar xz -C /tmp
+    sudo mv /tmp/"${pkg}" /usr/local/bin
+}
+
 # One-click installation of latest golang
 install_golang() {
     local -r pkg_name="golang"
@@ -535,6 +552,9 @@ main() {
 
     echo_header "Installing: helm"
     install_helm
+
+    echo_header "Installing: eksctl"
+    install_eksctl
 
     echo_header "Installing: packer"
     install_packer
