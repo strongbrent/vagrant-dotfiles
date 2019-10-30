@@ -168,6 +168,28 @@ install_golang() {
     echo 'export PATH=$GOPATH/bin:$PATH' >> "${ZSHRC}"
 }
 
+# Installs gravity from gravitational.com
+install_gravity() {
+    local -r pkg_name="gravity"
+    local -r pkg_cmd="tele"
+    local -r pkg_version="6.2.2"
+    local -r pkg_file="gravity-${pkg_version}-linux-x86_64-bin.tar.gz"
+    local -r pkg_url="https://get.gravitational.com"
+
+    if found_cmd "${pkg_cmd}"; then
+        echo_task "Package already installed: ${pkg_name}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg_name}"
+    wget -q "${pkg_url}/${pkg_file}"
+    tar xzf "${pkg_file}"
+    ./install.sh
+
+    echo_task "Cleaning up installation..."
+    rm -rfv ${pkg_file} install.sh tele tsh LICENSE VERSION README.md
+}
+
 # One click installation of helm
 install_helm() {
     local -r pkg_cmd="helm"
@@ -555,6 +577,9 @@ main() {
 
     echo_header "Installing: eksctl"
     install_eksctl
+
+    echo_header "Installing: gravity"
+    install_gravity
 
     echo_header "Installing: packer"
     install_packer
