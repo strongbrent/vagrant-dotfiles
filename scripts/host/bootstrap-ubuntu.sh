@@ -47,8 +47,16 @@ config_gnome_settings() {
         echo_task "Configuring: Gnome Desktop Battery - show percentage"
         gsettings set org.gnome.desktop.interface show-battery-percentage true
     fi
-}
 
+    # make workspace span dual monitors
+    workspace_only=$(gsettings get org.gnome.shell.overrides workspaces-only-on-primary)
+    if [ "${workspace_only}" == "false" ]; then
+        echo_task "Already configured: Gnome Desktop - Workspace spans dual monitors"
+    else
+        echo_task "Configuring: Gnome Desktop - Workspace spans dual monitors"
+        gsettings set org.gnome.shell.overrides workspaces-only-on-primary false
+    fi
+}
 
 # Configure tlp power saver - notebooks
 config_tlp() {
@@ -114,6 +122,21 @@ install_chrome() {
         echo_task "Removing: ${pkg_file}"
         rm -f ./${pkg_file}
     fi
+}
+
+# Installs minikube
+install_minikube() {
+    local -r pkg="minikube"
+
+    if found_cmd ${pkg}; then
+        echo_task "Package already installed: ${pkg}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg}"
+    wget -q https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    chmod 755 minikube-linux-amd64
+    sudo mv -v minikube-linux-amd64 /usr/local/bin/${pkg}
 }
 
 # Installs Oh-My-Zsh
@@ -350,6 +373,12 @@ main() {
 
     echo_header "Installing: VS Code Extensions"
     install_vs_code_extensions
+
+    echo_header "Installing: kubectl"
+    install_snap kubectl classic
+
+    echo_header "Installing: minikube"
+    install_minikube
 
     echo_header "Installing: Dbeaver"
     install_snap dbeaver-ce edge
