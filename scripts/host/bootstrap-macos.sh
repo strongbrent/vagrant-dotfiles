@@ -207,6 +207,8 @@ install_packages() {
         iftop
         jpeg
         jq
+        kubectl
+        minikube
         openssh
         openssl
         pass
