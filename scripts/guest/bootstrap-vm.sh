@@ -441,7 +441,7 @@ install_terraform() {
 install_terraform12() {
     local -r pkg_cmd="terraform"
     local -r pkg_name="${pkg_cmd}12"
-    local -r pkg_version="0.12.11"
+    local -r pkg_version="0.12.15"
     local -r pkg_file="terraform_${pkg_version}_linux_amd64.zip"
     local -r pkg_url="https://releases.hashicorp.com/terraform/${pkg_version}/${pkg_file}"
 
