@@ -347,6 +347,7 @@ install_packages() {
         ruby-full
         screen
         software-properties-common
+        sqlite3
         tcpdump
         tlp
         tmux
