@@ -322,6 +322,7 @@ install_packages() {
         glances
         gnupg-agent
         htop
+        httpie
         iftop
         iotop
         iptraf
