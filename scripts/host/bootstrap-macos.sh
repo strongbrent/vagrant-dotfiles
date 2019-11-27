@@ -215,6 +215,7 @@ install_packages() {
         pidof
         pwgen
         readline
+        shellcheck
         telnet
         tmux
         trash
@@ -307,6 +308,7 @@ install_vs_code_extensions() {
         donjayamanne.githistory
         ms-vscode-remote.vscode-remote-extensionpack
         yzhang.markdown-all-in-one
+        timonwong.shellcheck
     )
 
     for i in "${exts[@]}"

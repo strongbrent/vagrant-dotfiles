@@ -347,6 +347,7 @@ install_packages() {
         python3-venv
         ruby-full
         screen
+        shellcheck
         software-properties-common
         sqlite3
         tcpdump

@@ -212,6 +212,7 @@ install_packages() {
         linux-headers-generic
         net-tools
         openssh-server
+        shellcheck
         screen
         snapd
         terminator
@@ -301,6 +302,7 @@ install_vs_code_extensions() {
         donjayamanne.githistory
         ms-vscode-remote.vscode-remote-extensionpack
         yzhang.markdown-all-in-one
+        timonwong.shellcheck
     )
 
     for i in "${exts[@]}"
