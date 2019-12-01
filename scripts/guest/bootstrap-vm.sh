@@ -130,6 +130,23 @@ install_docker-compose() {
     sudo mv docker-compose-Linux-x86_64 /usr/local/bin/${pkg}
 }
 
+# One-click installation of the latest docker-machine
+install_docker-machine() {
+    local -r pkg="docker-machine"
+    local -r version="v0.16.2"
+    local -r base="https://github.com/docker/machine/releases/download/${version}"
+
+    if found_cmd "${pkg}"; then
+        echo_task "Package already installed: ${pkg}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg}"
+    curl --silent -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine
+    chmod +x /tmp/docker-machine
+    sudo mv /tmp/docker-machine /usr/local/bin/docker-machine
+}
+
 # Installs the latest eksctl
 install_eksctl() {
     local -r pkg="eksctl"
@@ -568,6 +585,9 @@ main() {
 
     echo_header "Installing: docker compose"
     install_docker-compose
+
+    echo_header "Installing: docker machine"
+    install_docker-machine
 
     echo_header "Installing: kubernetes"
     install_kubernetes
