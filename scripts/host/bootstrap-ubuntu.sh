@@ -101,7 +101,7 @@ create_sudoer() {
 	chmod 0600 "${tmp_path}"
 	echo "${USER}   ALL=(ALL:ALL) NOPASSWD:ALL" > "${tmp_path}"
 	sudo chown root:root "${tmp_path}"
-	sudo mv "${tmp_path}" ${sudoers_path}
+	sudo mv "${tmp_path}" "${sudoers_path}"
 }
 
 # Installs Google Chrome
@@ -154,9 +154,9 @@ install_ohmyzsh() {
 
     echo_task "Installing plugin packages: zsh-syntax-highlighting, zsh-autosuggestions"
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
-        ${pkg_dir}/custom/plugins/zsh-syntax-highlighting
+        "${pkg_dir}"/custom/plugins/zsh-syntax-highlighting
     git clone https://github.com/zsh-users/zsh-autosuggestions \
-        ${pkg_dir}/custom/plugins/zsh-autosuggestions
+        "${pkg_dir}"/custom/plugins/zsh-autosuggestions
 
     if ! found_file "${ZSHRC}"; then
         error_exit "ERROR: ${ZSHRC} does not exist"
@@ -238,29 +238,29 @@ install_packages() {
     for i in "${pkgs[@]}"
     do
         echo_task "Processing package: ${i}"
-        sudo apt-get install -y -qq ${i}
+        sudo apt-get install -y -qq "${i}"
     done
 }
 
 # Installs a specified snap package
 install_snap() {
-    if snap list ${1} &> /dev/null; then
+    if snap list "${1}" &> /dev/null; then
         echo_task "Snap package already installed: ${1}"
         return
     fi
 
     echo_task "Installing snap package: ${1}"
     if [[ "${2}" == "classic"  ]]; then
-        sudo snap install ${1} --classic
+        sudo snap install "${1}" --classic
         return
     fi
 
     if [[ "${2}" == "edge"  ]]; then
-        sudo snap install ${1} --edge
+        sudo snap install "${1}" --edge
         return
     fi
 
-    sudo snap install ${1}
+    sudo snap install "${1}"
 }
 
 # Installs Ultimate vimrc
@@ -339,13 +339,13 @@ modify_shell() {
     local -r current_shell=$(echo ${SHELL})
     local -r new_shell="/bin/zsh"
 
-    if [ ${current_shell} == ${new_shell} ]; then
+    if [ "${current_shell}" == "${new_shell}" ]; then
         echo_task "Shell is already set to use: ${current_shell}"
         return
     fi
 
     echo_task "Setting SHELL to use: ${new_shell}"
-    sudo usermod -s ${new_shell} ${USER}
+    sudo usermod -s "${new_shell}" "${USER}"
 }
 
 

@@ -94,7 +94,7 @@ create_sudoer() {
     chmod 0600 "${tmp_path}"
     echo "${USER} ALL = (ALL) NOPASSWD: ALL" > "${tmp_path}"
     sudo chown root:root "${tmp_path}"
-    sudo mv "${tmp_path}" ${sudoers_path}
+    sudo mv "${tmp_path}" "${sudoers_path}"
 }
 
 # DESC: checks to see if a brew formula is installed
@@ -152,9 +152,9 @@ install_ohmyzsh() {
 
     echo_task "Installing plugin packages: zsh-syntax-highlighting, zsh-autosuggestions"
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
-        ${pkg_dir}/custom/plugins/zsh-syntax-highlighting
+        "${pkg_dir}"/custom/plugins/zsh-syntax-highlighting
     git clone https://github.com/zsh-users/zsh-autosuggestions \
-        ${pkg_dir}/custom/plugins/zsh-autosuggestions
+        "${pkg_dir}"/custom/plugins/zsh-autosuggestions
 
     if ! found_file "${ZSHRC}"; then
         error_exit "ERROR: ${ZSHRC} does not exist"
@@ -348,4 +348,3 @@ main() {
 
 
 main "$@"
-
