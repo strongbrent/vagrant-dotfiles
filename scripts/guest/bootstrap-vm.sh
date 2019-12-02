@@ -32,7 +32,7 @@ install_awscli() {
     echo_task "Installing package: ${pkg}"
     curl -s "https://s3.amazonaws.com/aws-cli/${pkg_file}" -o "${pkg_file}"
     unzip "${pkg_file}"
-    sudo ${HOME}/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+    sudo "${HOME}"/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 
     if found_file "${HOME}/${pkg_file}"; then
         echo_task "Removing installation bundle for: ${pkg}"
@@ -99,8 +99,8 @@ install_docker() {
     fi
 
     echo_task "Installing package: ${pkg}"
-    curl -fsSL https://get.docker.com -o ${pkg_script}
-    sh ${pkg_script}
+    curl -fsSL https://get.docker.com -o "${pkg_script}"
+    sh "${pkg_script}"
 
     echo_task "Adding vagrant user to docker group"
     sudo usermod -aG docker vagrant
@@ -142,7 +142,7 @@ install_docker-machine() {
     fi
 
     echo_task "Installing package: ${pkg}"
-    curl --silent -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine
+    curl --silent -L "${base}/docker-machine-$(uname -s)-$(uname -m)" >/tmp/docker-machine
     chmod +x /tmp/docker-machine
     sudo mv /tmp/docker-machine /usr/local/bin/docker-machine
 }
@@ -159,7 +159,7 @@ install_eksctl() {
     fi
 
     echo_task "Installing package: ${pkg}"
-    curl --silent --location "${pkg_url}"/${pkg_file} \
+    curl --silent --location "${pkg_url}"/"${pkg_file}" \
         | tar xz -C /tmp
     sudo mv /tmp/"${pkg}" /usr/local/bin
 }
@@ -169,7 +169,7 @@ install_golang() {
     local -r pkg_name="golang"
     local -r pkg_dir="${HOME}/.go"
 
-    if found_dir ${pkg_dir}; then
+    if found_dir "${pkg_dir}"; then
         echo_task "Package already installed: ${pkg_name}"
         return
     fi
@@ -237,7 +237,6 @@ install_heroku() {
 # Installs latest version of kubernetes (via apt)
 install_kubernetes() {
     local -r pkg="kubectl"
-    local -r K8_version="1.6.0"
 
     if found_cmd ${pkg}; then
         echo_task "Package already installed: ${pkg}"
@@ -280,8 +279,8 @@ install_ohmyzsh() {
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
 
     echo_task "Installing plugin packages: zsh-syntax-highlighting, zsh-autosuggestions"
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${pkg_dir}/custom/plugins/zsh-syntax-highlighting
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${pkg_dir}/custom/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${pkg_dir}"/custom/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions "${pkg_dir}"/custom/plugins/zsh-autosuggestions
 
     if ! found_file "${ZSHRC}"; then
         error_exit "ERROR: ${ZSHRC} does not exist"
@@ -382,7 +381,7 @@ install_packages() {
     for i in "${pkgs[@]}"
     do
         echo_task "Processing package: ${i}"
-        sudo apt-get install -y -qq ${i}
+        sudo apt-get install -y -qq "${i}"
     done
 }
 
@@ -547,13 +546,13 @@ modify_shell() {
     local -r current_shell=$(echo ${SHELL})
     local -r new_shell="/bin/zsh"
 
-    if [ ${current_shell} == ${new_shell} ]; then
+    if [ "${current_shell}" == "${new_shell}" ]; then
         echo_task "Shell is already set to use: ${current_shell}"
         return
     fi
 
     echo_task "Setting SHELL to use: ${new_shell}"
-    sudo usermod -s ${new_shell} ${USER}
+    sudo usermod -s "${new_shell}" "${USER}"
 }
 
 
