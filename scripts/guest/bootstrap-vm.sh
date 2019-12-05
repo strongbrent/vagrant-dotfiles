@@ -366,6 +366,7 @@ install_packages() {
         shellcheck
         software-properties-common
         sqlite3
+        stress
         tcpdump
         tlp
         tmux
