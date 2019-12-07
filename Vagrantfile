@@ -7,6 +7,8 @@ Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-18.04"
 
   ### Forwarded ports ###
+  # For React
+  config.vm.network "forwarded_port", host: 3000, guest: 3000
   # For Django
   config.vm.network "forwarded_port", host: 8000, guest: 8000
   # For Flask
