@@ -9,6 +9,7 @@ Vagrant.configure("2") do |config|
   ### Forwarded ports ###
   # For React
   config.vm.network "forwarded_port", host: 3000, guest: 3000
+  config.vm.network "forwarded_port", host: 3007, guest: 3007
   # For Django
   config.vm.network "forwarded_port", host: 8000, guest: 8000
   # For Flask
