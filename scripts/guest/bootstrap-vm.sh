@@ -373,6 +373,7 @@ install_packages() {
         tree
         unzip
         wget
+        whois
         zlib1g-dev
         zsh
     )
