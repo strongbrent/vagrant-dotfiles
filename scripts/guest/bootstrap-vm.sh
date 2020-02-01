@@ -343,10 +343,14 @@ install_packages() {
         iotop
         iptraf
         jq
+        libncurses5-dev
+        libncursesw5-dev
         libffi-dev
         libbz2-dev
         liblzma-dev
+        libreadline-dev
         libsqlite3-dev
+        libssl-dev
         llvm
         make
         mtr
@@ -359,6 +363,7 @@ install_packages() {
         openssh-server
         parallel
         postgresql-client
+        python-openssl
         python-pip
         python3-pip
         python3-venv
@@ -370,11 +375,13 @@ install_packages() {
         stress
         tcpdump
         tlp
+        tk-dev
         tmux
         tree
         unzip
         wget
         whois
+        xz-utils
         zlib1g-dev
         zsh
     )
