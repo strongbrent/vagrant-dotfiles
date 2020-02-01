@@ -345,6 +345,7 @@ install_packages() {
         jq
         libffi-dev
         libbz2-dev
+        liblzma-dev
         libsqlite3-dev
         llvm
         make
