@@ -202,6 +202,7 @@ install_packages() {
         build-essential
         bzip2
         curl
+        default-jre
         firefox
         gdebi-core
         gnome-shell-extension-gsconnect-browsers
