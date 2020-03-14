@@ -366,6 +366,7 @@ install_packages() {
         python-openssl
         python-pip
         python3-pip
+        python3-pandas
         python3-venv
         ruby-full
         screen
