@@ -243,6 +243,24 @@ install_packages() {
     done
 }
 
+# Installs RingCentral
+install_ringcentral() {
+    local -r pkg_name="ringcentral"
+    local -r pkg_file="${pkg_name}_amd64.deb"
+    local -r pkg_url="https://ringcentral.zoom.us/client/latest/${pkg_file}"
+
+    if found_cmd "${pkg_name}"; then
+        echo_task "Package already installed: ${pkg_name}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg_name}"
+    wget -q "${pkg_url}"
+    sudo dpkg -i ./"${pkg_file}"
+    rm -fv "${pkg_file}"
+}
+
+
 # Installs a specified snap package
 install_snap() {
     if snap list "${1}" &> /dev/null; then
@@ -397,6 +415,9 @@ main() {
 
     echo_header "Installing: Zoom"
     install_zoom
+
+    echo_header "Installing: RingCentral"
+    install_ringcentral
 
     echo_header "Configuring: Vboxusers Group"
     config_vboxusers
