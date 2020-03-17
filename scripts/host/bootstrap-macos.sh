@@ -236,6 +236,7 @@ install_packages() {
         java
         kindle
         postman
+        ringcentral
         robo-3t
         slack
         spotify
