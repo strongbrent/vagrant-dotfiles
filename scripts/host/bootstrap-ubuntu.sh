@@ -211,6 +211,7 @@ install_packages() {
         libglib2.0-bin
         libxcb-xtest0
         linux-headers-generic
+        nautilus-image-converter
         net-tools
         openssh-server
         shellcheck
