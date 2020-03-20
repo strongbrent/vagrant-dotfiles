@@ -363,6 +363,7 @@ install_packages() {
         openssh-server
         parallel
         postgresql-client
+        pwgen
         python-openssl
         python-pip
         python3-pip
