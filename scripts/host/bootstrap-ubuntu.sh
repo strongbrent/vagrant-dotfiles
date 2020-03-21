@@ -207,6 +207,7 @@ install_packages() {
         gdebi-core
         gnome-shell-extension-gsconnect-browsers
         gnome-tweaks
+        libegl1-mesa
         libgl1-mesa-glx
         libglib2.0-bin
         libxcb-xtest0
