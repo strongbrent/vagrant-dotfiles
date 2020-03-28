@@ -2,7 +2,7 @@
 cinst microsoft-windows-terminal -r -y
 
 # Windows Subsystem for Linux
-cinst Microsoft-Windows-Subsystem-Linux -r -y -source windowsFeatures
+# cinst Microsoft-Windows-Subsystem-Linux -r -y -source windowsFeatures
 
 # Ubuntu 18.04
 ### Requires a reboot first ###
@@ -36,6 +36,7 @@ cinst git -r -y
 cinst make -r -y
 cinst awscli -r -y
 cinst azure-cli -r -y
+cinst gcloudsdk -r -y
 cinst kubernetes-cli -r -y
 cinst kubernetes-helm -r -y
 cinst minikube -r -y
