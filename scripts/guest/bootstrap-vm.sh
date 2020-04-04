@@ -461,34 +461,11 @@ install_terraform() {
     echo_task "Installing package: ${pkg}"
     curl -s -LO https://raw.github.com/robertpeteuil/terraform-installer/master/terraform-install.sh
     chmod u+x ${pkg_script}
-    ./${pkg_script} -a -i 0.11.11
+    ./${pkg_script} -a
 
     if found_file "${HOME}/${pkg_script}"; then
         echo_task "Removing installation script for: ${pkg}"
         rm -fv ${pkg_script}
-    fi
-}
-
-install_terraform12() {
-    local -r pkg_cmd="terraform"
-    local -r pkg_name="${pkg_cmd}12"
-    local -r pkg_version="0.12.18"
-    local -r pkg_file="terraform_${pkg_version}_linux_amd64.zip"
-    local -r pkg_url="https://releases.hashicorp.com/terraform/${pkg_version}/${pkg_file}"
-
-    if found_cmd "${pkg_name}"; then
-        echo_task "Package already installed: ${pkg_name}"
-        return
-    fi
-
-    echo_task "Installing package: ${pkg_name}"
-    wget -q "${pkg_url}"
-    unzip ${pkg_file}
-    sudo mv -v "${pkg_cmd}" /usr/local/bin/"${pkg_name}"
-
-    if found_file "${HOME}/${pkg_file}"; then
-        echo_task "Removing installation script for: ${pkg_name}"
-        rm -fv "${pkg_file}"
     fi
 }
 
@@ -620,9 +597,6 @@ main() {
 
     echo_header "Installing: terraform"
     install_terraform
-
-    echo_header "Installing: terraform 0.12.x"
-    install_terraform12
 
     echo_header "Installing: awsume"
     install_awsume
