@@ -73,6 +73,33 @@ install_aws_iam_authenticator() {
     sudo mv -v ./"${pkg_command}" /usr/local/bin/"${pkg_cmd}"
 }
 
+# Installs the Azure CLI
+install_azurecli() {
+    local -r pkg_name="azure-cli"
+    local -r pkg_command="az"
+
+    if found_cmd "${pkg_command}"; then
+        echo_task "Pakcage already installed: ${pkg_name}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg_name}"
+
+    # Install the signing key
+    curl -sL https://packages.microsoft.com/keys/microsoft.asc |
+        gpg --dearmor |
+        sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
+
+    # Add the repo
+    AZ_REPO=$(lsb_release -cs)
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" |
+        sudo tee /etc/apt/sources.list.d/azure-cli.list
+
+    # install package
+    sudo apt-get update -qq
+    sudo apt-get install -y -qq ${pkg_name}
+}
+
 # One-click installation of a speficied version of the chefdk
 install_chef() {
     local -r pkg="chefdk"
@@ -167,9 +194,9 @@ install_eksctl() {
 # Installs the latest gcloud SDK
 install_gcloudsdk() {
     local -r pkg_name="google-cloud-sdk"
-    local -r pkg_cmd="gcloud"
+    local -r pkg_command="gcloud"
 
-    if found_cmd "${pkg_cmd}"; then
+    if found_cmd "${pkg_command}"; then
         echo_task "Package already installed: ${pkg_name}"
         return
     fi
@@ -629,6 +656,9 @@ main() {
 
     echo_header "Installing: google-cloud-sdk"
     install_gcloudsdk
+
+    echo_header "Installing: azure-cli"
+    install_azurecli
 
     echo_header "Installing: zsh-nvm"
     install_zsh-nvm
