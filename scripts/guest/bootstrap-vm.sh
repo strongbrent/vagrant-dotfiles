@@ -164,6 +164,29 @@ install_eksctl() {
     sudo mv /tmp/"${pkg}" /usr/local/bin
 }
 
+# Installs the latest gcloud SDK
+install_gcloudsdk() {
+    local -r pkg_name="google-cloud-sdk"
+    local -r pkg_cmd="gcloud"
+
+    if found_cmd "${pkg_cmd}"; then
+        echo_task "Package already installed: ${pkg_name}"
+        return
+    fi
+
+    echo_task "Installing package: ${pkg_name}"
+    # create repo file
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" \
+        | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+    
+    # import repo key
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+    
+    # install package
+    sudo apt-get update -qq
+    sudo apt-get install -y -qq ${pkg_name}
+}
+
 # One-click installation of latest golang
 install_golang() {
     local -r pkg_name="golang"
@@ -603,6 +626,9 @@ main() {
 
     echo_header "Installing: aws-cli"
     install_awscli
+
+    echo_header "Installing: google-cloud-sdk"
+    install_gcloudsdk
 
     echo_header "Installing: zsh-nvm"
     install_zsh-nvm
