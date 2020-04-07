@@ -392,6 +392,9 @@ main() {
     echo_header "Installing: Postman"
     install_snap postman
 
+    echo_header "Installing: Microsoft Teams"
+    install_snap teams-for-linux
+
     echo_header "Installing: VS Code"
     install_snap code classic
 
