@@ -216,6 +216,7 @@ install_packages() {
         nautilus-image-converter
         net-tools
         openssh-server
+        pinta
         shellcheck
         screen
         snapd
